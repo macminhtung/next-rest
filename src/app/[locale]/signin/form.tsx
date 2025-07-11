@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { z } from 'zod';
+import { useTranslations } from 'next-intl';
 import { useZodForm } from '@/components/form/hooks';
 import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
@@ -15,6 +16,7 @@ const signInSchema = z.object({
 });
 
 const SignInForm = () => {
+  const t = useTranslations();
   const { Form, ItemField } = useZodForm({
     schema: signInSchema,
     defaultValues: { email: '', password: '' },
@@ -24,9 +26,9 @@ const SignInForm = () => {
 
   return (
     <Form onSubmit={onSubmit} className='grid gap-6 w-full max-w-[20rem]'>
-      <ItemField iType={EItemFieldType.INPUT} label='Username' fieldName='email' />
-      <ItemField iType={EItemFieldType.PASSWORD} label='Password' fieldName='password' />
-      <ButtonC type='submit'>Submit</ButtonC>
+      <ItemField iType={EItemFieldType.INPUT} label={t('email')} fieldName='email' />
+      <ItemField iType={EItemFieldType.PASSWORD} label={t('password')} fieldName='password' />
+      <ButtonC type='submit'>{t('submit')}</ButtonC>
     </Form>
   );
 };

@@ -1,7 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
+  const t = useTranslations();
+
   return (
     <div className='flex flex-col h-full items-center justify-center'>
       <Image
@@ -13,7 +16,7 @@ export default function Home() {
         priority
       />
       <Link href={'/signin'} className='mt-10 text-3xl font-bold underline'>
-        SignIn
+        {t('signIn')}
       </Link>
     </div>
   );

@@ -3,6 +3,7 @@
 - NextJs + Turbopack + Typescript + Eslint + Prettier
 - Tailwind + Shadcn UI
 - React hook form + Zod
+- Next-intl + Dark mode
 
 ## Getting Started
 
