@@ -1,3 +1,5 @@
+'use client';
+
 import { type Dispatch, SetStateAction, ReactNode } from 'react';
 import { Switch } from '@/components/ui';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
