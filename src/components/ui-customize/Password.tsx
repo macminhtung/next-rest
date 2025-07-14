@@ -17,13 +17,7 @@ export const PasswordC = (props: TPasswordCProps) => {
       className={className}
       {...rest}
       endItem={
-        <div onClick={() => setShow(!show)}>
-          {show ? (
-            <EyeOpenIcon className='dark:[&>path]:text-background' />
-          ) : (
-            <EyeCloseIcon className='dark:[&>path]:text-background' />
-          )}
-        </div>
+        <div onClick={() => setShow(!show)}>{show ? <EyeOpenIcon /> : <EyeCloseIcon />}</div>
       }
     />
   );

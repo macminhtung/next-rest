@@ -16,6 +16,7 @@ type TSwitchProps = TOriginSwitchProps & {
 
 export function SwitchC(props: TSwitchProps) {
   const { onChange, className, thumbClassName, icon, onCheckedChange, ...rest } = props;
+
   return (
     <SwitchPrimitives.Root
       className={cn(

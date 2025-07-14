@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
-import { createContext, useContext, useState } from 'react';
+import { useState } from 'react';
+import { createContext, useContextSelector } from 'use-context-selector';
 import { manageTokens, EManageTokenType } from '@/common/funcs';
 
 interface IAuthUser {
@@ -44,4 +45,5 @@ export const useAuthContextValue = (): IAuthContext => {
   };
 };
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuthSelector = <T>(selector: (ctx: IAuthContext) => T): T =>
+  useContextSelector(AuthContext, selector);

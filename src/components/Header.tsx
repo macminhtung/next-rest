@@ -1,15 +1,18 @@
 'use client';
 
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
+import { useTheme } from 'next-themes';
 import { ELanguage } from '@/common/enums';
 import { manageTokens, EManageTokenType } from '@/common/funcs';
 import { MoonIcon, SunMediumIcon, Menu, LogOut, ListX } from 'lucide-react';
-import { useAppContext, ETheme } from '@/context/useAppContext';
-import { useAuthContext } from '@/context/useAuthContext';
+import { ETheme } from '@/common/enums';
+import { useAuthSelector } from '@/context/useAuthContext';
 import { AvatarC, ButtonC, SelectC, SwitchC } from '@/components/ui-customize';
-import { usePathname, useRouter } from '@/i18n/navigation';
+import { usePathname, useRouter as useRouterI18n } from '@/i18n/navigation';
+import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,13 +29,19 @@ const languageOptions = Object.values(ELanguage).map((key) => ({
 const Header = () => {
   const t = useTranslations();
   const pathname = usePathname();
+  const routerI18n = useRouterI18n();
+  const curLocale = useLocale();
+
   const router = useRouter();
-  const { theme, setTheme } = useAppContext();
-  const { tokens, setTokens, authUser } = useAuthContext();
+  const tokens = useAuthSelector((ctx) => ctx.tokens);
+  const setTokens = useAuthSelector((ctx) => ctx.setTokens);
+  const authUser = useAuthSelector((ctx) => ctx.authUser);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
-  const isDarkMode = theme === ETheme.DARK;
-  const isLoggedIn = !!tokens.accessToken;
+  const isDarkMode = useMemo(() => theme === ETheme.DARK, [theme]);
+  const isLoggedIn = useMemo(() => !!tokens.accessToken, [tokens.accessToken]);
 
   const signOut = useCallback(() => {
     const noneTokens = { accessToken: '', refreshToken: '' };
@@ -52,8 +61,7 @@ const Header = () => {
           icon={
             isDarkMode ? <MoonIcon className='h-4 w-4' /> : <SunMediumIcon className='h-4 w-4' />
           }
-          checked={isDarkMode}
-          onCheckedChange={(checked) => setTheme(checked ? ETheme.LIGHT : ETheme.DARK)}
+          onCheckedChange={(checked) => setTheme(checked ? ETheme.DARK : ETheme.LIGHT)}
           className='h-6 w-[2.65rem]'
           thumbClassName='h-5 w-5 data-[state=checked]:translate-x-5'
         />
@@ -61,18 +69,25 @@ const Header = () => {
         <SelectC
           className='min-w-18 min-h-8 !h-6'
           popoverClassName='min-w-18 max-w-fit'
-          value={ELanguage.EN}
+          value={curLocale}
           options={languageOptions}
-          onChange={(lang) => router.push(pathname, { locale: lang })}
+          onChange={(lang) => routerI18n.push(pathname, { locale: lang })}
         />
       </div>
     ),
-    [isDarkMode, isLoggedIn, pathname, router, setTheme]
+    [curLocale, isDarkMode, isLoggedIn, pathname, routerI18n, setTheme]
   );
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
   return (
     <div className='flex items-center p-3 gap-2 border-b-[1px] border-b-gray-900 h-[66px] dark:border-b-gray-300'>
-      <AvatarC src='/logo.jpg' className={'rounded-[0.2rem] cursor-pointer size-10'} />
+      <AvatarC
+        src='/logo.jpg'
+        className={'rounded-[0.2rem] cursor-pointer size-10'}
+        onClick={() => router.push('/en')}
+      />
       <div className='flex items-center gap-4 ml-auto'>
         {isLoggedIn ? (
           // # ============== #
