@@ -61,6 +61,7 @@ const Header = () => {
           icon={
             isDarkMode ? <MoonIcon className='h-4 w-4' /> : <SunMediumIcon className='h-4 w-4' />
           }
+          checked={isDarkMode}
           onCheckedChange={(checked) => setTheme(checked ? ETheme.DARK : ETheme.LIGHT)}
           className='h-6 w-[2.65rem]'
           thumbClassName='h-5 w-5 data-[state=checked]:translate-x-5'
