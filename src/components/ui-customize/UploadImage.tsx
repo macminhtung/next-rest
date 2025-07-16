@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ImageIcon, XCircleIcon, LoaderCircle } from 'lucide-react';
 import Image from 'next/image';
 import Dropzone, { type DropzoneProps } from 'react-dropzone';
-import { showToastError } from '@/common/funcs';
+import { showToastError } from '@/common/client-funcs';
 
 type TUploadImageC = {
   className?: string;

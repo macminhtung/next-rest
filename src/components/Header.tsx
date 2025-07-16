@@ -5,10 +5,10 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { ELanguage } from '@/common/enums';
-import { manageTokens, EManageTokenType } from '@/common/funcs';
+import { manageTokens, EManageTokenType } from '@/common/client-funcs';
 import { MoonIcon, SunMediumIcon, Menu, LogOut, ListX } from 'lucide-react';
 import { ETheme } from '@/common/enums';
-import { useAuthSelector } from '@/context/useAuthContext';
+import { useAppStore } from '@/store';
 import { AvatarC, ButtonC, SelectC, SwitchC } from '@/components/ui-customize';
 import { usePathname, useRouter as useRouterI18n } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
@@ -31,12 +31,12 @@ const Header = () => {
   const pathname = usePathname();
   const routerI18n = useRouterI18n();
   const curLocale = useLocale();
-
   const router = useRouter();
-  const tokens = useAuthSelector((ctx) => ctx.tokens);
-  const setTokens = useAuthSelector((ctx) => ctx.setTokens);
-  const authUser = useAuthSelector((ctx) => ctx.authUser);
   const { theme, setTheme } = useTheme();
+
+  const tokens = useAppStore((state) => state.tokens);
+  const setTokens = useAppStore((state) => state.setTokens);
+  const authUser = useAppStore((state) => state.authUser);
   const [mounted, setMounted] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
