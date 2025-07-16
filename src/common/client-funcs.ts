@@ -33,7 +33,7 @@ export enum EManageTokenType {
 export const manageTokens = (
   payload:
     | { type: EManageTokenType.GET }
-    | { type: EManageTokenType.SET; refreshToken: string; accessToken: string }
+    | { type: EManageTokenType.SET; accessToken: string; refreshToken: string }
 ) => {
   const { type } = payload;
   if (typeof window === 'undefined') return { refreshToken: '', accessToken: '' };
@@ -47,7 +47,7 @@ export const manageTokens = (
 
   // CASE: Set Tokens
   const { refreshToken, accessToken } = payload;
-  localStorage.setItem(ELocalStorageKey.REFRESH_TOKEN, refreshToken);
+  localStorage.setItem(ELocalStorageKey.REFRESH_TOKEN, refreshToken || '');
   localStorage.setItem(ELocalStorageKey.ACCESS_TOKEN, accessToken);
 
   return { refreshToken, accessToken };
