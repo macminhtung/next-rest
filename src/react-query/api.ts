@@ -13,14 +13,12 @@ const JWT_ERRORS = {
   UNEXPECTED_TOKEN: 'Unexpected token',
 };
 
-const BASE_URL = 'https://localhost:3001/api';
-
 const isJwtInvalid = (errorMessage: string) =>
   [JWT_ERRORS.INVALID_TOKEN, JWT_ERRORS.INVALID_SIGNATURE].includes(errorMessage) ||
   errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: process.env.API_URL,
   withCredentials: true,
 });
 
@@ -40,38 +38,40 @@ api.interceptors.response.use(
     if (errorMessage === JWT_ERRORS.EXPIRED) {
       const refreshToken = manageTokens({ type: EManageTokenType.GET }).refreshToken;
 
-      api
-        .post('/refreshToken', { refreshToken })
-        // CASE: Update new refreshToken & accessToken
-        .then(({ data }) => {
-          const newAccessToken = data.accessToken;
-          const originalConfig = error.config!;
-          originalConfig.headers!.Authorization = `Bearer ${newAccessToken}`;
+      return (
+        api
+          .post('/refreshToken', { refreshToken })
+          // CASE: Update new refreshToken & accessToken
+          .then(({ data }) => {
+            const newAccessToken = data.accessToken;
+            const originalConfig = error.config!;
+            originalConfig.headers!.Authorization = `Bearer ${newAccessToken}`;
 
-          // Set new tokens
-          manageTokens({ type: EManageTokenType.SET, accessToken: newAccessToken, refreshToken });
+            // Set new tokens
+            manageTokens({ type: EManageTokenType.SET, accessToken: newAccessToken, refreshToken });
 
-          // Recall the API with new accessToken
-          return (
-            api({ ...originalConfig! })
-              // CASE: Invalid refresh token ==> Show toast error
-              .catch((reError: AxiosError) => {
-                // Identify the re-error message
-                const reErrorMessage = reError.message;
+            // Recall the API with new accessToken
+            return (
+              api({ ...originalConfig! })
+                // CASE: Invalid refresh token ==> Show toast error
+                .catch((reError: AxiosError) => {
+                  // Identify the re-error message
+                  const reErrorMessage = reError.message;
 
-                // CASE: JWT invalid
-                if (isJwtInvalid(reErrorMessage))
-                  throw showToastError(error, {
-                    duration: 1500,
-                    onAutoClose: () => clearTokensAndNavigateSignInPage(),
-                  });
+                  // CASE: JWT invalid
+                  if (isJwtInvalid(reErrorMessage))
+                    throw showToastError(error, {
+                      duration: 1500,
+                      onAutoClose: () => clearTokensAndNavigateSignInPage(),
+                    });
 
-                // Show toast error
-                showToastError(reError);
-                throw null;
-              })
-          );
-        });
+                  // Show toast error
+                  showToastError(reError);
+                  throw null;
+                })
+            );
+          })
+      );
     }
 
     // CASE: JWT invalid
