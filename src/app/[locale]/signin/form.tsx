@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { z } from 'zod';
 import { useTranslations } from 'next-intl';
 import { useZodForm } from '@/components/form/hooks';
@@ -20,6 +20,7 @@ const signInSchema = z.object({
 
 const SignInForm = () => {
   const t = useTranslations();
+  const [mounted, setMounted] = useState(false);
   const setAccessToken = useAppStore((state) => state.setAccessToken);
   const { Form, ItemField } = useZodForm({
     schema: signInSchema,
@@ -39,6 +40,9 @@ const SignInForm = () => {
     },
     [signInMutation]
   );
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
   return (
     <Form onSubmit={onSubmit} className='grid gap-6 w-full max-w-[20rem]'>

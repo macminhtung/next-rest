@@ -40,7 +40,7 @@ api.interceptors.response.use(
 
       return (
         api
-          .post('/auth/refresh-token', { refreshToken }, { withCredentials: true })
+          .post('/auth/refresh-token', { refreshToken })
           // CASE: Update new refreshToken & accessToken
           .then(({ data }) => {
             const newAccessToken = data.accessToken;

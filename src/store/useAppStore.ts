@@ -32,7 +32,7 @@ export const useAppStore = create<TAppState>((set) => ({
   setIsAppLoading: (isAppLoading) => set({ isAppLoading }),
   theme:
     typeof window !== 'undefined'
-      ? localStorage.getItem(ELocalStorageKey.UI_THEME) === ETheme.LIGHT
+      ? localStorage?.getItem(ELocalStorageKey.UI_THEME) === ETheme.LIGHT
         ? ETheme.LIGHT
         : ETheme.DARK
       : ETheme.DARK,
