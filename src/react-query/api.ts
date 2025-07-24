@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import {
   showToastError,
-  manageTokens,
+  manageAccessToken,
   EManageTokenType,
   clearTokensAndNavigateSignInPage,
 } from '@/common/client-funcs';
@@ -17,30 +17,30 @@ const isJwtInvalid = (errorMessage: string) =>
   [JWT_ERRORS.INVALID_TOKEN, JWT_ERRORS.INVALID_SIGNATURE].includes(errorMessage) ||
   errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
 
-const api = axios.create({
-  baseURL: process.env.API_URL,
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
-  const accessToken = manageTokens({ type: EManageTokenType.GET }).accessToken;
+  const accessToken = manageAccessToken({ type: EManageTokenType.GET });
   if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError) => {
+  async (error: AxiosError<{ message: string }>) => {
     // Identify the error message
-    const errorMessage = error.message;
+    const errorMessage = error.response?.data?.message || '';
 
     // CASE: JWT Expired ==> Refresh accessToken ==> Recall API
     if (errorMessage === JWT_ERRORS.EXPIRED) {
-      const refreshToken = manageTokens({ type: EManageTokenType.GET }).refreshToken;
+      const refreshToken = manageAccessToken({ type: EManageTokenType.GET });
 
       return (
         api
-          .post('/refreshToken', { refreshToken })
+          .post('/auth/refresh-token', { refreshToken }, { withCredentials: true })
           // CASE: Update new refreshToken & accessToken
           .then(({ data }) => {
             const newAccessToken = data.accessToken;
@@ -48,15 +48,18 @@ api.interceptors.response.use(
             originalConfig.headers!.Authorization = `Bearer ${newAccessToken}`;
 
             // Set new tokens
-            manageTokens({ type: EManageTokenType.SET, accessToken: newAccessToken, refreshToken });
+            manageAccessToken({
+              type: EManageTokenType.SET,
+              accessToken: newAccessToken,
+            });
 
             // Recall the API with new accessToken
             return (
               api({ ...originalConfig! })
                 // CASE: Invalid refresh token ==> Show toast error
-                .catch((reError: AxiosError) => {
+                .catch((reError: AxiosError<{ message: string }>) => {
                   // Identify the re-error message
-                  const reErrorMessage = reError.message;
+                  const reErrorMessage = reError.response?.data?.message || '';
 
                   // CASE: JWT invalid
                   if (isJwtInvalid(reErrorMessage))

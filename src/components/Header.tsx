@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { ELanguage } from '@/common/enums';
-import { manageTokens, EManageTokenType } from '@/common/client-funcs';
+import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
 import { MoonIcon, SunMediumIcon, Menu, LogOut, ListX } from 'lucide-react';
 import { ETheme } from '@/common/enums';
 import { useAppStore } from '@/store';
@@ -34,20 +34,19 @@ const Header = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
 
-  const tokens = useAppStore((state) => state.tokens);
-  const setTokens = useAppStore((state) => state.setTokens);
+  const accessToken = useAppStore((state) => state.accessToken);
+  const setAccessToken = useAppStore((state) => state.setAccessToken);
   const authUser = useAppStore((state) => state.authUser);
   const [mounted, setMounted] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const isDarkMode = useMemo(() => theme === ETheme.DARK, [theme]);
-  const isLoggedIn = useMemo(() => !!tokens.accessToken, [tokens.accessToken]);
+  const isLoggedIn = useMemo(() => !!accessToken, [accessToken]);
 
   const signOut = useCallback(() => {
-    const noneTokens = { accessToken: '', refreshToken: '' };
-    setTokens(noneTokens);
-    manageTokens({ type: EManageTokenType.SET, ...noneTokens });
-  }, [setTokens]);
+    setAccessToken('');
+    manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
+  }, [setAccessToken]);
 
   const themeAndLang = useMemo(
     () => (

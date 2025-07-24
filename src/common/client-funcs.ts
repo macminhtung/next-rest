@@ -1,16 +1,16 @@
 'use client';
 
 import { createElement } from 'react';
+import type { AxiosError } from 'axios';
 import { toast, type ExternalToast } from 'sonner';
 import { X } from 'lucide-react';
-
 import { ELocalStorageKey } from '@/common/enums';
 
 export const showToastError = (
-  error: Error,
+  error: AxiosError<{ message: string }>,
   options?: Omit<ExternalToast, 'action' | 'actionButtonStyle'>
-) =>
-  toast.error(error?.message, {
+) => {
+  toast.error(error?.response?.data?.message, {
     action: {
       label: createElement(X, { className: 'w-5 text-gray-700 dark:text-white' }),
       onClick: () => null,
@@ -19,9 +19,10 @@ export const showToastError = (
     duration: 2500,
     ...options,
   });
+};
 
 export const clearTokensAndNavigateSignInPage = () => {
-  manageTokens({ type: EManageTokenType.SET, refreshToken: '', accessToken: '' });
+  manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
   window.location.href = '/';
 };
 
@@ -30,25 +31,18 @@ export enum EManageTokenType {
   SET = 'SET',
 }
 
-export const manageTokens = (
-  payload:
-    | { type: EManageTokenType.GET }
-    | { type: EManageTokenType.SET; accessToken: string; refreshToken?: string }
+export const manageAccessToken = (
+  payload: { type: EManageTokenType.GET } | { type: EManageTokenType.SET; accessToken: string }
 ) => {
   const { type } = payload;
-  if (typeof window === 'undefined') return { refreshToken: '', accessToken: '' };
+  if (typeof window === 'undefined') return '';
 
   // CASE: Get Tokens
   if (type === EManageTokenType.GET)
-    return {
-      refreshToken: localStorage.getItem(ELocalStorageKey.REFRESH_TOKEN) || '',
-      accessToken: localStorage.getItem(ELocalStorageKey.ACCESS_TOKEN) || '',
-    };
+    return localStorage.getItem(ELocalStorageKey.ACCESS_TOKEN) || '';
 
   // CASE: Set Tokens
-  const { refreshToken = '', accessToken } = payload;
-  localStorage.setItem(ELocalStorageKey.REFRESH_TOKEN, refreshToken || '');
+  const { accessToken } = payload;
   localStorage.setItem(ELocalStorageKey.ACCESS_TOKEN, accessToken);
-
-  return { accessToken, refreshToken };
+  return accessToken;
 };

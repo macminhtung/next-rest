@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { ELocalStorageKey, ETheme } from '@/common/enums';
-import { manageTokens, EManageTokenType } from '@/common/client-funcs';
+import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
 
 type TAuthUser = {
   avatar: string;
@@ -21,8 +21,8 @@ type TAppState = {
   setIsAppLoading: (isLoading: boolean) => void;
   theme: ETheme;
   setTheme: (theme: ETheme) => void;
-  tokens: { accessToken: string; refreshToken: string };
-  setTokens: (tokens: { accessToken: string; refreshToken: string }) => void;
+  accessToken: string;
+  setAccessToken: (token: string) => void;
   authUser: TAuthUser;
   setAuthUser: (authUser: TAuthUser) => void;
 };
@@ -37,8 +37,8 @@ export const useAppStore = create<TAppState>((set) => ({
         : ETheme.DARK
       : ETheme.DARK,
   setTheme: (theme) => set({ theme }),
-  tokens: manageTokens({ type: EManageTokenType.GET }),
-  setTokens: (tokens) => set({ tokens }),
+  accessToken: manageAccessToken({ type: EManageTokenType.GET }),
+  setAccessToken: (tokens) => set({ accessToken: tokens }),
   authUser: initAuthUser,
   setAuthUser: (authUser) => set({ authUser }),
 }));
