@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useMemo } from 'react';
+import { memo, useState, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
@@ -42,13 +42,17 @@ const Header = () => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const isDarkMode = useMemo(() => theme === ETheme.DARK, [theme]);
 
+  // Remove accessToken
+  const removeAccessToken = useCallback(() => {
+    setAccessToken('');
+    manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
+    router.push(`/${curLocale}/signin`);
+  }, [curLocale, router, setAccessToken]);
+
   // Handle signOut
   const signOutMutation = useSignOutMutation({
-    onSuccess: () => {
-      setAccessToken('');
-      manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
-      router.push(`/${curLocale}/signin`);
-    },
+    onSuccess: () => removeAccessToken(),
+    onError: () => removeAccessToken(),
   });
 
   // # ======================== #
