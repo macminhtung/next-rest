@@ -10,7 +10,7 @@ export const showToastError = (
   error: AxiosError<{ message: string }>,
   options?: Omit<ExternalToast, 'action' | 'actionButtonStyle'>
 ) => {
-  toast.error(error?.response?.data?.message, {
+  toast.error(error?.response?.data?.message || error?.message, {
     action: {
       label: createElement(X, { className: 'w-5 text-gray-700 dark:text-white' }),
       onClick: () => null,

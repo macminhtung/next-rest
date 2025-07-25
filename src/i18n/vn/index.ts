@@ -1,7 +1,15 @@
 export const vnTranslation = {
   signIn: 'Đăng nhập',
+  signUp: 'Đăng ký',
   signOut: 'Đăng xuất',
   submit: 'Nộp',
   email: 'Email',
   password: 'Mật khẩu',
+  confirmPassword: 'Nhập lại mật khẩu',
+  "Don't have an account?": 'Bạn chưa có tài khoản?',
+  'Already have an account?': 'Bạn đã có tài khoản?',
+  profile: 'Hồ sơ',
+  avatar: 'Ảnh đại diện',
+  firstName: 'Tên',
+  lastName: 'Họ',
 };

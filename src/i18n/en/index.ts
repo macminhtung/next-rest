@@ -1,7 +1,15 @@
 export const enTranslation = {
   signIn: 'SignIn',
+  signUp: 'SignUp',
   signOut: 'SignOut',
   submit: 'Submit',
   email: 'Email',
   password: 'Password',
+  confirmPassword: 'Confirm password',
+  "Don't have an account?": "Don't have an account?",
+  'Already have an account?': 'Already have an account?',
+  profile: 'Profile',
+  avatar: 'Avatar',
+  firstName: 'First name',
+  lastName: 'Last name',
 };

@@ -1,5 +1,5 @@
-import SignInForm from '@/app/[locale]/signin/form';
 import { useTranslations } from 'next-intl';
+import SignInForm from '@/app/[locale]/signin/form';
 
 const SignInPage = () => {
   const t = useTranslations();

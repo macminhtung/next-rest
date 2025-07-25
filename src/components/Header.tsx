@@ -1,19 +1,18 @@
 'use client';
 
-import { useCallback, useState, useMemo, useEffect } from 'react';
+import { memo, useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { ELanguage } from '@/common/enums';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
-import { MoonIcon, SunMediumIcon, Menu, LogOut, ListX } from 'lucide-react';
+import { MoonIcon, SunMediumIcon, Menu, LogIn, LogOut, ListX, UserPen } from 'lucide-react';
 import { ETheme } from '@/common/enums';
 import { useAppStore } from '@/store';
 import { AvatarC, ButtonC, SelectC, SwitchC } from '@/components/ui-customize';
 import { usePathname, useRouter as useRouterI18n } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useGetAuthProfileQuery } from '@/react-query/auth';
 import { useSignOutMutation } from '@/react-query/auth';
 import {
   DropdownMenu,
@@ -30,23 +29,20 @@ const languageOptions = Object.values(ELanguage).map((key) => ({
 
 const Header = () => {
   const t = useTranslations();
+  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const routerI18n = useRouterI18n();
   const curLocale = useLocale();
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
 
   const accessToken = useAppStore((state) => state.accessToken);
   const setAccessToken = useAppStore((state) => state.setAccessToken);
   const authUser = useAppStore((state) => state.authUser);
-  const setAuthUser = useAppStore((state) => state.setAuthUser);
-  const setIsAppLoading = useAppStore((state) => state.setIsAppLoading);
-  const [mounted, setMounted] = useState(false);
+
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-
   const isDarkMode = useMemo(() => theme === ETheme.DARK, [theme]);
-  const isLoggedIn = useMemo(() => !!accessToken, [accessToken]);
 
+  // Handle signOut
   const signOutMutation = useSignOutMutation({
     onSuccess: () => {
       setAccessToken('');
@@ -55,16 +51,15 @@ const Header = () => {
     },
   });
 
-  const signOut = useCallback(() => {
-    signOutMutation.mutate(undefined);
-  }, [signOutMutation]);
-
+  // # ======================== #
+  // # ==> THEME & LANGUAGE <== #
+  // # ======================== #
   const themeAndLang = useMemo(
     () => (
       <div
         className={cn(
-          'flex items-center justify-center gap-4 pb-4 my-1',
-          isLoggedIn && 'border-b border-primary'
+          'flex items-center justify-center gap-4 my-1',
+          accessToken && 'border-b border-primary pb-4'
         )}
       >
         <SwitchC
@@ -86,18 +81,8 @@ const Header = () => {
         />
       </div>
     ),
-    [curLocale, isDarkMode, isLoggedIn, pathname, routerI18n, setTheme]
+    [curLocale, isDarkMode, accessToken, pathname, routerI18n, setTheme]
   );
-
-  // Get authProfile query
-  useGetAuthProfileQuery(undefined, {
-    onSuccess: (data) => setAuthUser(data),
-    onLoading: (isLoading) => setIsAppLoading(isLoading),
-    enabled: !!accessToken && !authUser.email,
-  });
-
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
 
   return (
     <div className='flex items-center p-3 gap-2 border-b-[1px] border-b-gray-900 h-[66px] dark:border-b-gray-300'>
@@ -106,8 +91,8 @@ const Header = () => {
         className={'rounded-[0.2rem] cursor-pointer size-10'}
         onClick={() => router.push(`/${curLocale}`)}
       />
-      <div className='flex items-center gap-4 ml-auto'>
-        {isLoggedIn ? (
+      <div className='flex items-center justify-center gap-4 ml-auto'>
+        {accessToken ? (
           // # ============== #
           // # ==> LOGGED <== #
           // # ============== #
@@ -128,7 +113,14 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className='min-w-fit w-32 p-1.5 absolute right-[-22px] top-[4px]'>
                 <DropdownMenuLabel>{themeAndLang}</DropdownMenuLabel>
-                <DropdownMenuItem onClick={signOut} disabled={signOutMutation.isPending}>
+                <DropdownMenuItem onClick={() => router.push(`/${curLocale}/dashboard/profile`)}>
+                  <UserPen className='scale-[1.3] mr-2 text-primary' />
+                  <span>{t('profile')}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => signOutMutation.mutate(undefined)}
+                  disabled={signOutMutation.isPending}
+                >
                   <LogOut className='scale-[1.2] mr-2 text-primary' />
                   <span>{t('signOut')}</span>
                 </DropdownMenuItem>
@@ -139,11 +131,21 @@ const Header = () => {
           // # ================= #
           // # ==> UN-LOGGED <== #
           // # ================= #
-          themeAndLang
+          <>
+            {pathname !== '/signin' && (
+              <>
+                <ButtonC className='h-8' onClick={() => router.push(`/${curLocale}/signin`)}>
+                  <LogIn /> {t('signIn')}
+                </ButtonC>
+                <div className='w-[2px] h-[25px] bg-gray-900 dark:bg-gray-300' />{' '}
+              </>
+            )}
+            {themeAndLang}
+          </>
         )}
       </div>
     </div>
   );
 };
 
-export default Header;
+export default memo(Header);

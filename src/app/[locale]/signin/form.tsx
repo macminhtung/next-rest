@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback } from 'react';
+import Link from 'next/link';
 import { z } from 'zod';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
@@ -24,8 +25,8 @@ const SignInForm = () => {
   const t = useTranslations();
   const curLocale = useLocale();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
   const setAccessToken = useAppStore((state) => state.setAccessToken);
+
   const { Form, ItemField } = useZodForm({
     schema: signInSchema,
     defaultValues: { email: '', password: '' },
@@ -35,7 +36,7 @@ const SignInForm = () => {
     onSuccess: (data) => {
       setAccessToken(data.accessToken);
       manageAccessToken({ type: EManageTokenType.SET, accessToken: data.accessToken });
-      router.push(`/${curLocale}`);
+      router.push(`/${curLocale}/dashboard`);
     },
   });
 
@@ -46,9 +47,6 @@ const SignInForm = () => {
     [signInMutation]
   );
 
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
-
   return (
     <Form onSubmit={onSubmit} className='grid gap-6 w-full max-w-[20rem]'>
       <ItemField iType={EItemFieldType.INPUT} label={t('email')} fieldName='email' />
@@ -56,6 +54,12 @@ const SignInForm = () => {
       <ButtonC type='submit' loading={signInMutation.isPending}>
         {t('submit')}
       </ButtonC>
+      <div className='text-center'>
+        <span>{t("Don't have an account?")}</span>
+        <Link href={`/${curLocale}/signup`} className='ml-5 font-bold text-xl underline'>
+          {t('signUp')}
+        </Link>
+      </div>
     </Form>
   );
 };

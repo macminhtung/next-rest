@@ -1,3 +1,5 @@
+'use client';
+
 import { create } from 'zustand';
 import { ELocalStorageKey, ETheme } from '@/common/enums';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
@@ -34,6 +36,8 @@ type TAppState = {
 export const useAppStore = create<TAppState>((set) => ({
   isAppLoading: false,
   setIsAppLoading: (isAppLoading) => set({ isAppLoading }),
+  // theme:
+  //   localStorage.getItem(ELocalStorageKey.UI_THEME) === ETheme.LIGHT ? ETheme.LIGHT : ETheme.DARK,
   theme:
     typeof window !== 'undefined'
       ? localStorage?.getItem(ELocalStorageKey.UI_THEME) === ETheme.LIGHT

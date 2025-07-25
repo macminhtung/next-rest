@@ -2,24 +2,26 @@ import { useMutation, QueryClient } from '@tanstack/react-query';
 import type { TUseMutationOptions } from '@/react-query/types';
 import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
+import type { TAuthUser } from '@/store';
 
-type SignInPayload = {
+type SignUpPayload = {
   email: string;
   password: string;
+  avatar: string;
+  firstName: string;
+  lastName: string;
 };
 
-type SignInResponse = { accessToken: string };
-
-export const useSignInMutation = <V extends SignInPayload, R extends SignInResponse>(
+export const useSignUpMutation = <V extends SignUpPayload, R extends TAuthUser>(
   options?: TUseMutationOptions<V, R>,
   queryClient?: QueryClient
 ) =>
   useMutation(
     {
-      mutationKey: ['useSignInMutation'],
+      mutationKey: ['useSignUpMutation'],
       mutationFn: (variables: V) =>
         axiosApi
-          .post<unknown, AxiosResponse<R>, V>('auth/signin', variables)
+          .post<unknown, AxiosResponse<R>, V>('auth/signup', variables)
           .then((data) => data.data),
       ...options,
     },

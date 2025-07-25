@@ -18,7 +18,11 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'next', 'prettier'),
   ...compat.plugins('eslint-plugin-prettier'),
   ...compat.config({
-    rules: { ...prettier.rules, 'prettier/prettier': 'error' },
+    rules: {
+      ...prettier.rules,
+      'prettier/prettier': 'error',
+      '@typescript-eslint/no-unused-vars': 'warn',
+    },
   }),
 ];
 
