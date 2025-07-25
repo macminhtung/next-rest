@@ -137,7 +137,7 @@ const Header = () => {
                 <ButtonC className='h-8' onClick={() => router.push(`/${curLocale}/signin`)}>
                   <LogIn /> {t('signIn')}
                 </ButtonC>
-                <div className='w-[2px] h-[25px] bg-gray-900 dark:bg-gray-300' />{' '}
+                <div className='w-[2px] h-[25px] bg-gray-900 dark:bg-gray-300' />
               </>
             )}
             {themeAndLang}

@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import Header from '@/components/Header';
-import { Toaster } from '@/components/ui/sonner';
 import { usePathname } from 'next/navigation';
 import { AppLoading } from '@/components/AppLoading';
 import { useMounted } from '@/common/hooks';
@@ -36,7 +35,6 @@ export const ClientLayout = (props: { children: React.ReactNode }) => {
 
   return (
     <div className='max-w-[1800px] w-full h-full flex flex-col'>
-      <Toaster position='top-right' />
       <Header />
       <div className='flex p-3 h-[calc(100vh-66px)] overflow-auto'>
         <div className='p-3 flex flex-1 justify-center h-fit'>{props.children}</div>
