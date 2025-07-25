@@ -3,22 +3,17 @@ import type { TUseMutationOptions } from '@/react-query/types';
 import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 
-type SignInPayload = {
-  email: string;
-  password: string;
-};
-
-type SignInResponse = { accessToken: string };
-
-export const useSignInMutation = <V extends SignInPayload, R extends SignInResponse>(
+export const useSignOutMutation = <V extends undefined, R extends string>(
   options?: TUseMutationOptions<V, R>,
   queryClient?: QueryClient
 ) =>
   useMutation(
     {
-      mutationKey: ['useSignInMutation'],
+      mutationKey: ['useSignOutMutation'],
       mutationFn: (variables: V) =>
-        axiosApi.post<unknown, AxiosResponse<R>, V>('auth/signin', variables).then((data) => data.data),
+        axiosApi
+          .delete<unknown, AxiosResponse<R>, V>('auth/signout', variables)
+          .then((data) => data.data),
       ...options,
     },
     queryClient

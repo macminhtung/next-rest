@@ -1,3 +1,5 @@
+'use client';
+
 import axios, { AxiosError } from 'axios';
 import {
   showToastError,
@@ -17,18 +19,18 @@ const isJwtInvalid = (errorMessage: string) =>
   [JWT_ERRORS.INVALID_TOKEN, JWT_ERRORS.INVALID_SIGNATURE].includes(errorMessage) ||
   errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
 
-export const api = axios.create({
+export const axiosApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
+axiosApi.interceptors.request.use((config) => {
   const accessToken = manageAccessToken({ type: EManageTokenType.GET });
   if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 });
 
-api.interceptors.response.use(
+axiosApi.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<{ message: string }>) => {
     // Identify the error message
@@ -39,7 +41,7 @@ api.interceptors.response.use(
       const refreshToken = manageAccessToken({ type: EManageTokenType.GET });
 
       return (
-        api
+        axiosApi
           .post('/auth/refresh-token', { refreshToken })
           // CASE: Update new refreshToken & accessToken
           .then(({ data }) => {
@@ -55,22 +57,23 @@ api.interceptors.response.use(
 
             // Recall the API with new accessToken
             return (
-              api({ ...originalConfig! })
+              axiosApi({ ...originalConfig! })
                 // CASE: Invalid refresh token ==> Show toast error
                 .catch((reError: AxiosError<{ message: string }>) => {
                   // Identify the re-error message
                   const reErrorMessage = reError.response?.data?.message || '';
 
                   // CASE: JWT invalid
-                  if (isJwtInvalid(reErrorMessage))
+                  if (isJwtInvalid(reErrorMessage)) {
                     throw showToastError(error, {
                       duration: 1500,
                       onAutoClose: () => clearTokensAndNavigateSignInPage(),
                     });
+                  }
 
                   // Show toast error
                   showToastError(reError);
-                  throw null;
+                  return Promise.reject(reError);
                 })
             );
           })
@@ -86,6 +89,6 @@ api.interceptors.response.use(
 
     // Show toast error
     showToastError(error);
-    throw null;
+    return Promise.reject(error);
   }
 );

@@ -13,6 +13,8 @@ import { AvatarC, ButtonC, SelectC, SwitchC } from '@/components/ui-customize';
 import { usePathname, useRouter as useRouterI18n } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useGetAuthProfileQuery } from '@/react-query/auth';
+import { useSignOutMutation } from '@/react-query/auth';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,16 +39,25 @@ const Header = () => {
   const accessToken = useAppStore((state) => state.accessToken);
   const setAccessToken = useAppStore((state) => state.setAccessToken);
   const authUser = useAppStore((state) => state.authUser);
+  const setAuthUser = useAppStore((state) => state.setAuthUser);
+  const setIsAppLoading = useAppStore((state) => state.setIsAppLoading);
   const [mounted, setMounted] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const isDarkMode = useMemo(() => theme === ETheme.DARK, [theme]);
   const isLoggedIn = useMemo(() => !!accessToken, [accessToken]);
 
+  const signOutMutation = useSignOutMutation({
+    onSuccess: () => {
+      setAccessToken('');
+      manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
+      router.push(`/${curLocale}/signin`);
+    },
+  });
+
   const signOut = useCallback(() => {
-    setAccessToken('');
-    manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
-  }, [setAccessToken]);
+    signOutMutation.mutate(undefined);
+  }, [signOutMutation]);
 
   const themeAndLang = useMemo(
     () => (
@@ -78,6 +89,13 @@ const Header = () => {
     [curLocale, isDarkMode, isLoggedIn, pathname, routerI18n, setTheme]
   );
 
+  // Get authProfile query
+  useGetAuthProfileQuery(undefined, {
+    onSuccess: (data) => setAuthUser(data),
+    onLoading: (isLoading) => setIsAppLoading(isLoading),
+    enabled: !!accessToken && !authUser.email,
+  });
+
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 
@@ -86,7 +104,7 @@ const Header = () => {
       <AvatarC
         src='/logo.jpg'
         className={'rounded-[0.2rem] cursor-pointer size-10'}
-        onClick={() => router.push('/en')}
+        onClick={() => router.push(`/${curLocale}`)}
       />
       <div className='flex items-center gap-4 ml-auto'>
         {isLoggedIn ? (
@@ -110,7 +128,7 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className='min-w-fit w-32 p-1.5 absolute right-[-22px] top-[4px]'>
                 <DropdownMenuLabel>{themeAndLang}</DropdownMenuLabel>
-                <DropdownMenuItem onClick={signOut}>
+                <DropdownMenuItem onClick={signOut} disabled={signOutMutation.isPending}>
                   <LogOut className='scale-[1.2] mr-2 text-primary' />
                   <span>{t('signOut')}</span>
                 </DropdownMenuItem>

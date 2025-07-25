@@ -3,6 +3,8 @@
 import { useCallback, useState, useEffect } from 'react';
 import { z } from 'zod';
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useZodForm } from '@/components/form/hooks';
 import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
@@ -20,6 +22,8 @@ const signInSchema = z.object({
 
 const SignInForm = () => {
   const t = useTranslations();
+  const curLocale = useLocale();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const setAccessToken = useAppStore((state) => state.setAccessToken);
   const { Form, ItemField } = useZodForm({
@@ -31,12 +35,13 @@ const SignInForm = () => {
     onSuccess: (data) => {
       setAccessToken(data.accessToken);
       manageAccessToken({ type: EManageTokenType.SET, accessToken: data.accessToken });
+      router.push(`/${curLocale}`);
     },
   });
 
   const onSubmit = useCallback(
     (values: z.infer<typeof signInSchema>) => {
-      signInMutation.mutateAsync(values);
+      signInMutation.mutate(values);
     },
     [signInMutation]
   );

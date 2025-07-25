@@ -2,18 +2,22 @@ import { create } from 'zustand';
 import { ELocalStorageKey, ETheme } from '@/common/enums';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
 
-type TAuthUser = {
+export type TAuthUser = {
+  id: string;
   avatar: string;
   email: string;
   firstName: string;
   lastName: string;
+  roleId: number;
 };
 
 const initAuthUser: TAuthUser = {
+  id: '',
   avatar: '',
   email: '',
   firstName: '',
   lastName: '',
+  roleId: 0,
 };
 
 type TAppState = {
