@@ -3,8 +3,23 @@
 import { createElement } from 'react';
 import type { AxiosError } from 'axios';
 import { toast, type ExternalToast } from 'sonner';
-import { X } from 'lucide-react';
+import { X, CircleX, CircleCheck } from 'lucide-react';
 import { ELocalStorageKey } from '@/common/enums';
+
+export const showToastSuccess = (
+  message: string,
+  options?: Omit<ExternalToast, 'action' | 'actionButtonStyle'>
+) => {
+  toast.success(message, {
+    action: {
+      label: createElement(X, { className: 'w-5 text-gray-700 dark:text-white' }),
+      onClick: () => null,
+    },
+    actionButtonStyle: { backgroundColor: 'transparent' },
+    icon: createElement(CircleCheck, { className: 'w-5 text-green-500' }),
+    ...options,
+  });
+};
 
 export const showToastError = (
   error: AxiosError<{ message: string }>,
@@ -17,6 +32,7 @@ export const showToastError = (
     },
     actionButtonStyle: { backgroundColor: 'transparent' },
     duration: 2500,
+    icon: createElement(CircleX, { className: 'w-5 text-red-500' }),
     ...options,
   });
 };

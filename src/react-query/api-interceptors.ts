@@ -13,11 +13,13 @@ const JWT_ERRORS = {
   INVALID_TOKEN: 'invalid token',
   INVALID_SIGNATURE: 'invalid signature',
   UNEXPECTED_TOKEN: 'Unexpected token',
+  TIMESTAMP_INCORRECT: 'Timestamp incorrect',
 };
 
 const isJwtInvalid = (errorMessage: string) =>
-  [JWT_ERRORS.INVALID_TOKEN, JWT_ERRORS.INVALID_SIGNATURE].includes(errorMessage) ||
-  errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
+  [JWT_ERRORS.INVALID_TOKEN, JWT_ERRORS.INVALID_SIGNATURE, JWT_ERRORS.TIMESTAMP_INCORRECT].includes(
+    errorMessage
+  ) || errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
 
 export const axiosApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,

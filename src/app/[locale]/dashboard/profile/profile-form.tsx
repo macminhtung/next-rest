@@ -8,6 +8,7 @@ import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
 import { useAppStore } from '@/store';
 import { useUpdateProfileMutation } from '@/react-query/auth';
+import { showToastSuccess } from '@/common/client-funcs';
 
 const profileSchema = z.object({
   avatar: z.string().optional(),
@@ -28,7 +29,10 @@ const ProfileForm = () => {
   });
 
   const updateProfileMutation = useUpdateProfileMutation({
-    onSuccess: (data) => setAuthUser({ ...authUser, ...data }),
+    onSuccess: (data) => {
+      setAuthUser({ ...authUser, ...data });
+      showToastSuccess(t('updatedSuccessfully'));
+    },
   });
 
   const onSubmit = useCallback(

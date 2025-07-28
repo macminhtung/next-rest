@@ -2,24 +2,26 @@ import { useMutation, QueryClient } from '@tanstack/react-query';
 import type { TUseMutationOptions } from '@/react-query/types';
 import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
+import type { TSignInResponse } from '@/react-query/auth/';
 
-type TSignInPayload = {
-  email: string;
-  password: string;
+type TUpdatePasswordPayload = {
+  oldPassword: string;
+  newPassword: string;
 };
 
-export type TSignInResponse = { accessToken: string };
-
-export const useSignInMutation = <V extends TSignInPayload, R extends TSignInResponse>(
+export const useUpdatePasswordMutation = <
+  V extends TUpdatePasswordPayload,
+  R extends TSignInResponse,
+>(
   options?: TUseMutationOptions<V, R>,
   queryClient?: QueryClient
 ) =>
   useMutation(
     {
-      mutationKey: ['useSignInMutation'],
+      mutationKey: ['useUpdatePasswordMutation'],
       mutationFn: (variables: V) =>
         axiosApi
-          .post<unknown, AxiosResponse<R>, V>('auth/signin', variables)
+          .put<unknown, AxiosResponse<R>, V>('auth/password', variables)
           .then((data) => data.data),
       ...options,
     },

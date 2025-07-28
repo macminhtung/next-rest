@@ -1,10 +1,8 @@
 'use client';
 
-import { create, StoreApi } from 'zustand';
+import { create } from 'zustand';
 import { ELocalStorageKey, ETheme } from '@/common/enums';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
-
-type Get<T, K, F> = K extends keyof T ? T[K] : F;
 
 export type TAuthUser = {
   id: string;
