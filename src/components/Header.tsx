@@ -8,7 +8,7 @@ import { ELanguage } from '@/common/enums';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
 import { MoonIcon, SunMediumIcon, Menu, LogIn, LogOut, ListX, UserPen } from 'lucide-react';
 import { ETheme } from '@/common/enums';
-import { useAppStore } from '@/store';
+import { useAppStore, initAuthUser } from '@/store';
 import { AvatarC, ButtonC, SelectC, SwitchC } from '@/components/ui-customize';
 import { usePathname, useRouter as useRouterI18n } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
@@ -37,17 +37,19 @@ const Header = () => {
 
   const accessToken = useAppStore((state) => state.accessToken);
   const setAccessToken = useAppStore((state) => state.setAccessToken);
-  const authUser = useAppStore((state) => state.authUser);
+  const { avatar, firstName, lastName } = useAppStore((state) => state.authUser);
+  const setAuthUser = useAppStore((state) => state.setAuthUser);
 
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const isDarkMode = useMemo(() => theme === ETheme.DARK, [theme]);
 
   // Remove accessToken
   const removeAccessToken = useCallback(() => {
-    setAccessToken('');
-    manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
     router.push(`/${curLocale}/signin`);
-  }, [curLocale, router, setAccessToken]);
+    setAccessToken('');
+    setAuthUser(initAuthUser);
+    manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
+  }, [curLocale, router, setAccessToken, setAuthUser]);
 
   // Handle signOut
   const signOutMutation = useSignOutMutation({
@@ -101,8 +103,9 @@ const Header = () => {
           // # ==> LOGGED <== #
           // # ============== #
           <>
+            <span className='font-semibold text-sm'>{`${firstName} ${lastName}`}</span>
             <AvatarC
-              src={authUser.avatar || 'https://github.com/shadcn.png'}
+              src={avatar || 'https://github.com/shadcn.png'}
               className='rounded-[50%] size-10'
             />
             <DropdownMenu open={isOpenMenu} onOpenChange={setIsOpenMenu}>
@@ -136,14 +139,10 @@ const Header = () => {
           // # ==> UN-LOGGED <== #
           // # ================= #
           <>
-            {pathname !== '/signin' && (
-              <>
-                <ButtonC className='h-8' onClick={() => router.push(`/${curLocale}/signin`)}>
-                  <LogIn /> {t('signIn')}
-                </ButtonC>
-                <div className='w-[2px] h-[25px] bg-gray-900 dark:bg-gray-300' />
-              </>
-            )}
+            <ButtonC className='h-8' onClick={() => router.push(`/${curLocale}/signin`)}>
+              <LogIn /> {t('signIn')}
+            </ButtonC>
+            <div className='w-[2px] h-[25px] bg-gray-900 dark:bg-gray-300' />
             {themeAndLang}
           </>
         )}

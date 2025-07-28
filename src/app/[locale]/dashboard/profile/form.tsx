@@ -7,9 +7,10 @@ import { useZodForm } from '@/components/form/hooks';
 import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
 import { useAppStore } from '@/store';
+import { useUpdateProfileMutation } from '@/react-query/auth';
 
 const profileSchema = z.object({
-  avatar: z.string().nullable().optional(),
+  avatar: z.string().optional(),
   email: z.string().email(),
   firstName: z.string(),
   lastName: z.string(),
@@ -17,16 +18,26 @@ const profileSchema = z.object({
 
 const ProfileForm = () => {
   const t = useTranslations();
-  const { avatar, email, firstName, lastName } = useAppStore((state) => state.authUser);
+  const authUser = useAppStore((state) => state.authUser);
 
-  const { Form, ItemField } = useZodForm({
+  const setAuthUser = useAppStore((state) => state.setAuthUser);
+
+  const { methods, Form, ItemField } = useZodForm({
     schema: profileSchema,
-    defaultValues: { avatar, email, firstName, lastName },
+    values: authUser,
   });
 
-  const onSubmit = useCallback((values: z.infer<typeof profileSchema>) => {
-    console.log(values);
-  }, []);
+  const updateProfileMutation = useUpdateProfileMutation({
+    onSuccess: (data) => setAuthUser({ ...authUser, ...data }),
+  });
+
+  const onSubmit = useCallback(
+    (values: z.infer<typeof profileSchema>) => {
+      const { email: _, ...rest } = values;
+      updateProfileMutation.mutate(rest);
+    },
+    [updateProfileMutation]
+  );
 
   return (
     <Form onSubmit={onSubmit} className='grid gap-6 w-full max-w-[20rem]'>
@@ -36,10 +47,21 @@ const ProfileForm = () => {
         label={''}
         fieldName='avatar'
       />
-      <ItemField iType={EItemFieldType.INPUT} label={t('email')} fieldName='email' />
+      <ItemField
+        iType={EItemFieldType.INPUT}
+        label={t('email')}
+        fieldName='email'
+        iProps={{ disabled: true }}
+      />
       <ItemField iType={EItemFieldType.INPUT} label={t('firstName')} fieldName='firstName' />
       <ItemField iType={EItemFieldType.INPUT} label={t('lastName')} fieldName='lastName' />
-      <ButtonC type='submit'>{t('submit')}</ButtonC>
+      <ButtonC
+        type='submit'
+        loading={updateProfileMutation.isPending}
+        disabled={!methods.formState.isDirty}
+      >
+        {t('submit')}
+      </ButtonC>
     </Form>
   );
 };

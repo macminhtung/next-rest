@@ -29,7 +29,7 @@ const SignInForm = () => {
 
   const { Form, ItemField } = useZodForm({
     schema: signInSchema,
-    defaultValues: { email: '', password: '' },
+    values: { email: '', password: '' },
   });
 
   const signInMutation = useSignInMutation({

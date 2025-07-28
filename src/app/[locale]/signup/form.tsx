@@ -41,7 +41,7 @@ const SignUpForm = () => {
 
   const { Form, ItemField } = useZodForm({
     schema: signUpSchema,
-    defaultValues: {
+    values: {
       email: '',
       avatar: '',
       password: '',
