@@ -1,13 +1,7 @@
 'use client';
 
-import {
-  useCallback,
-  useState,
-  type ReactNode,
-  Dispatch,
-  SetStateAction,
-  ComponentProps,
-} from 'react';
+import { useCallback, useState } from 'react';
+import type { ReactNode, ComponentProps } from 'react';
 import {
   Table,
   TableBody,
@@ -40,13 +34,13 @@ export type TTableCProps<
   loading?: boolean;
   pagination?: ComponentProps<typeof PaginationC>;
   selectMode?: {
-    selectedRecords: R[];
-    setSelectedRecords: Dispatch<SetStateAction<R[]>>;
+    selectedRecords: Record<H[number]['key'], string | number>[];
+    setSelectedRecords: (v: Record<H[number]['key'], string | number>[]) => void;
   };
 };
 
 export const TableC = <
-  R extends Record<string, string | number>,
+  R extends Record<H[number]['key'], string | number>,
   const H extends readonly THeader<R>[],
 >(
   props: TTableCProps<R, H>
@@ -69,17 +63,16 @@ export const TableC = <
   const onSelectRow = useCallback(
     (checked: CheckedState, record: R) => {
       if (selectMode) {
-        selectMode.setSelectedRecords((prev) => {
-          const newSelectedRecord = checked
-            ? [...prev, record]
-            : prev.filter((i) => i[rowKey] !== record[rowKey]);
+        const { selectedRecords, setSelectedRecords } = selectMode;
+        const newSelectedRecord = checked
+          ? [...selectedRecords, record]
+          : selectedRecords.filter((i) => i[rowKey] !== record[rowKey]);
 
-          if (newSelectedRecord.length === rowRecords.length) setCheckedAllState(true);
-          else if (newSelectedRecord.length) setCheckedAllState('indeterminate');
-          else setCheckedAllState(false);
+        if (newSelectedRecord.length === rowRecords.length) setCheckedAllState(true);
+        else if (newSelectedRecord.length) setCheckedAllState('indeterminate');
+        else setCheckedAllState(false);
 
-          return newSelectedRecord;
-        });
+        setSelectedRecords(newSelectedRecord);
       }
     },
     [selectMode, rowKey, rowRecords.length]
@@ -127,7 +120,7 @@ export const TableC = <
                       onCheckedChange={(checked) => onSelectRow(checked, record)}
                     />
                   )}
-                  {header.render ? header.render(record) : (record[header.key] as ReactNode)}
+                  {header.render ? header.render(record) : record[header.key]}
                 </TableCell>
               ))}
             </TableRow>
