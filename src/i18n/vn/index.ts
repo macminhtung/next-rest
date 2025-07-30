@@ -2,6 +2,7 @@ export const vnTranslation = {
   signIn: 'Đăng nhập',
   signUp: 'Đăng ký',
   signOut: 'Đăng xuất',
+  product: 'Sản phẩm',
   submit: 'Nộp',
   email: 'Email',
   password: 'Mật khẩu',

@@ -3,11 +3,7 @@ import type { TUseMutationOptions } from '@/react-query/types';
 import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 import type { TSignInResponse } from '@/react-query/auth/';
-
-type TUpdatePasswordPayload = {
-  oldPassword: string;
-  newPassword: string;
-};
+import type { TUpdatePasswordPayload } from '@/react-query/auth';
 
 export const useUpdatePasswordMutation = <
   V extends TUpdatePasswordPayload,

@@ -1,6 +1,6 @@
 'use client';
 
-import { type Dispatch, SetStateAction, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Switch } from '@/components/ui';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
 import { type CheckedState } from '@radix-ui/react-checkbox';
@@ -11,7 +11,7 @@ type TSwitchProps = TOriginSwitchProps & {
   icon?: ReactNode;
   className?: string;
   thumbClassName?: string;
-  onChange?: Dispatch<SetStateAction<CheckedState>>; // Use for react-hook-form
+  onChange?: (checkedState: CheckedState) => void; // Use for react-hook-form
 };
 
 export function SwitchC(props: TSwitchProps) {

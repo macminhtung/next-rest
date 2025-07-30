@@ -8,7 +8,7 @@ import { useMounted } from '@/common/hooks';
 import { useGetAuthProfileQuery } from '@/react-query/auth';
 import { useAppStore } from '@/store';
 
-export const ClientLayout = (props: { children: React.ReactNode }) => {
+export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const mounted = useMounted();
   const pathname = usePathname();
   const setAuthUser = useAppStore((state) => state.setAuthUser);
@@ -37,7 +37,7 @@ export const ClientLayout = (props: { children: React.ReactNode }) => {
     <div className='max-w-[1800px] w-full h-full flex flex-col'>
       <Header />
       <div className='flex p-3 h-[calc(100vh-66px)] overflow-auto'>
-        <div className='p-3 flex flex-1 justify-center h-fit'>{props.children}</div>
+        <div className='p-3 flex flex-1 justify-center h-fit'>{children}</div>
       </div>
     </div>
   );

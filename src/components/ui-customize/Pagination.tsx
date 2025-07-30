@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, type Dispatch, SetStateAction } from 'react';
+import { useMemo } from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -14,17 +14,17 @@ import { SelectC } from '@/components/ui-customize';
 import { cn } from '@/lib/utils';
 
 type TPaginationProps = {
-  page: number;
-  take: number;
-  total: number;
+  page?: number;
+  take?: number;
+  total?: number;
   className?: string;
-  setPagination?: Dispatch<SetStateAction<{ page: number; take: number }>>;
+  setPagination?: (payload: { page: number; take: number }) => void;
 };
 
 const NUM_RECORDS_PER_PAGE = [10, 20, 50, 100];
 
 export const PaginationC = (props: TPaginationProps) => {
-  const { page, total, take, className, setPagination } = props;
+  const { page = 1, total = 1, take = 1, className, setPagination } = props;
   const prevPages = useMemo(() => [page - 2, page - 1].filter((prevP) => prevP > 0), [page]);
   const pageQuantity = useMemo(() => Math.ceil(total / take), [take, total]);
   const nextPages = useMemo(

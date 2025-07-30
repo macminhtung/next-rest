@@ -3,14 +3,7 @@ import type { TUseMutationOptions } from '@/react-query/types';
 import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 import type { TAuthUser } from '@/store';
-
-type TSignUpPayload = {
-  email: string;
-  password: string;
-  avatar: string;
-  firstName: string;
-  lastName: string;
-};
+import type { TSignUpPayload } from '@/react-query/auth';
 
 export const useSignUpMutation = <V extends TSignUpPayload, R extends TAuthUser>(
   options?: TUseMutationOptions<V, R>,

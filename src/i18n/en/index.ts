@@ -2,6 +2,7 @@ export const enTranslation = {
   signIn: 'SignIn',
   signUp: 'SignUp',
   signOut: 'SignOut',
+  product: 'Product',
   submit: 'Submit',
   email: 'Email',
   password: 'Password',

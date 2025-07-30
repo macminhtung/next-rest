@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ImageIcon, XCircleIcon, LoaderCircle } from 'lucide-react';
@@ -12,7 +11,7 @@ import { showToastError } from '@/common/client-funcs';
 type TUploadImageC = {
   className?: string;
   value?: string; // Use for react-hook-form
-  onChange?: Dispatch<SetStateAction<string>>; // Use for react-hook-form
+  onChange?: (v: string) => void; // Use for react-hook-form
   onUpload?: (file: File) => Promise<string>; // Uploading the file and return the fileURL
 } & Omit<DropzoneProps, 'onDrop' | 'maxFiles'>;
 

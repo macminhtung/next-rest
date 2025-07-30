@@ -2,11 +2,7 @@ import { useMutation, QueryClient } from '@tanstack/react-query';
 import type { TUseMutationOptions } from '@/react-query/types';
 import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
-
-type TSignInPayload = {
-  email: string;
-  password: string;
-};
+import type { TSignInPayload } from '@/react-query/auth';
 
 export type TSignInResponse = { accessToken: string };
 

@@ -1,5 +1,3 @@
-'use client';
-
 import axios, { AxiosError } from 'axios';
 import {
   showToastError,

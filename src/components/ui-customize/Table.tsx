@@ -22,65 +22,58 @@ import { Loader2 } from 'lucide-react';
 import { PaginationC } from '@/components/ui-customize';
 import { cn } from '@/lib/utils';
 
-export type THeader<K extends string> = {
-  key: K;
+export type THeader<R> = {
+  key: keyof R;
   title?: ReactNode;
   width?: string | number;
+  render?: (record: R) => ReactNode;
 };
 
-type THeaderValues<K extends string, H extends readonly THeader<K>[]> = H[number]['key'];
-type TRowRecord<K extends string, H extends readonly THeader<K>[]> = Record<
-  THeaderValues<K, H>,
-  string | number
->;
-
-export type TTableCProps<K extends string, H extends readonly THeader<K>[]> = {
+export type TTableCProps<
+  R extends Record<H[number]['key'], string | number>,
+  H extends readonly THeader<R>[],
+> = {
+  rowRecords: R[];
   headers: H;
-  rowRecords: TRowRecord<K, H>[];
-  rowKey: THeaderValues<K, H>;
+  rowKey: H[number]['key'];
   className?: string;
   loading?: boolean;
   pagination?: ComponentProps<typeof PaginationC>;
   selectMode?: {
-    selectedRecords: TRowRecord<K, H>[];
-    setSelectedRecords: Dispatch<SetStateAction<TRowRecord<K, H>[]>>;
+    selectedRecords: R[];
+    setSelectedRecords: Dispatch<SetStateAction<R[]>>;
   };
 };
 
-export const TableC = <K extends string, H extends readonly THeader<K>[]>(
-  props: TTableCProps<K, H>
+export const TableC = <
+  R extends Record<string, string | number>,
+  const H extends readonly THeader<R>[],
+>(
+  props: TTableCProps<R, H>
 ) => {
   const { headers, rowRecords, className, pagination, loading, rowKey, selectMode } = props;
   const [checkedAllState, setCheckedAllState] = useState<CheckedState>(false);
 
-  // ==> ON SELECT ALL <==
   const onSelectAll = useCallback(() => {
     if (selectMode) {
-      // Select all records
       if (checkedAllState === 'indeterminate' || !checkedAllState) {
         setCheckedAllState(true);
         selectMode.setSelectedRecords(rowRecords);
-      }
-
-      // Deselect all records
-      else {
+      } else {
         setCheckedAllState(false);
         selectMode.setSelectedRecords([]);
       }
     }
   }, [checkedAllState, selectMode, rowRecords]);
 
-  // ==> ON SELECT ROW <==
   const onSelectRow = useCallback(
-    (checked: CheckedState, record: TRowRecord<K, H>) => {
+    (checked: CheckedState, record: R) => {
       if (selectMode) {
         selectMode.setSelectedRecords((prev) => {
-          // Update selected records
           const newSelectedRecord = checked
             ? [...prev, record]
             : prev.filter((i) => i[rowKey] !== record[rowKey]);
 
-          // Update select all state
           if (newSelectedRecord.length === rowRecords.length) setCheckedAllState(true);
           else if (newSelectedRecord.length) setCheckedAllState('indeterminate');
           else setCheckedAllState(false);
@@ -104,13 +97,13 @@ export const TableC = <K extends string, H extends readonly THeader<K>[]>(
           <TableRow className='[&>*]:whitespace-nowrap sticky top-0 !bg-background shadow z-10'>
             {headers.map((item, idx) => (
               <TableHead
-                key={`${idx}-${item.key}`}
-                className={cn(!idx ? 'pl-4' : undefined)}
+                key={`${idx}-${String(item.key)}`}
+                className={cn(!idx && 'pl-4')}
                 style={{ width: item.width || 'auto' }}
               >
                 {selectMode && item.key === rowKey && (
                   <Checkbox
-                    className='mr-2 '
+                    className='mr-2'
                     checked={checkedAllState}
                     onCheckedChange={onSelectAll}
                   />
@@ -120,11 +113,11 @@ export const TableC = <K extends string, H extends readonly THeader<K>[]>(
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody className='overflow-hidden'>
+        <TableBody>
           {rowRecords.map((record, idxR) => (
-            <TableRow key={`${idxR}`} className='odd:bg-muted/50 [&>*]:whitespace-nowrap h-11'>
+            <TableRow key={idxR} className='odd:bg-muted/50 [&>*]:whitespace-nowrap h-11'>
               {headers.map((header, idxH) => (
-                <TableCell className={!idxH ? 'pl-4' : undefined} key={header.key}>
+                <TableCell key={String(header.key)} className={cn(!idxH && 'pl-4')}>
                   {selectMode && header.key === rowKey && (
                     <Checkbox
                       className='mr-2'
@@ -134,7 +127,7 @@ export const TableC = <K extends string, H extends readonly THeader<K>[]>(
                       onCheckedChange={(checked) => onSelectRow(checked, record)}
                     />
                   )}
-                  {record[header.key]}
+                  {header.render ? header.render(record) : (record[header.key] as ReactNode)}
                 </TableCell>
               ))}
             </TableRow>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import type { Dispatch, SetStateAction, ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { CheckIcon, XCircle, ChevronDown, XIcon, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -22,7 +22,7 @@ import {
 export type TMultiSelectCProps = {
   options: ISelectOption[];
   value?: ISelectOption['value'][]; // Use for react-hook-form
-  onChange?: Dispatch<SetStateAction<string[]>>; // Use for react-hook-form
+  onChange?: (v: string[]) => void; // Use for react-hook-form
   className?: string;
   placeholder?: string;
   loading?: boolean;
@@ -41,7 +41,6 @@ export const MultiSelectC = (props: TMultiSelectCProps) => {
     loading,
     onSearch,
   } = props;
-  // const [open, setOpen] = useState<boolean>(false);
   const [selectedValues, setSelectedValues] = useState<string[]>(value);
 
   // Toggle option value
@@ -183,7 +182,7 @@ export const MultiSelectC = (props: TMultiSelectCProps) => {
                     >
                       <CheckIcon />
                     </div>
-                    <span className=''>{option.label}</span>
+                    <span>{option.label}</span>
                   </CommandItem>
                 );
               })}
