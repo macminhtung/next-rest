@@ -2,6 +2,6 @@
 
 import { HydrationBoundary, HydrationBoundaryProps } from '@tanstack/react-query';
 
-export const HydrateClient = ({ state, children }: HydrationBoundaryProps) => {
+export const Hydration = ({ state, children }: HydrationBoundaryProps) => {
   return <HydrationBoundary state={state}>{children}</HydrationBoundary>;
 };

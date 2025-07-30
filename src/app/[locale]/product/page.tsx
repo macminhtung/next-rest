@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { HydrateClient } from '@/react-query/HydrateClient';
+import { Hydration } from '@/react-query/Hydration';
 import axios from 'axios';
 import type { TRequestConfig, TGetPaginatedRecords } from '@/react-query/types';
 import { Products } from '@/app/[locale]/product/products';
@@ -21,9 +21,9 @@ const ProductPage = async () => {
   return (
     <div className='flex flex-col h-full w-full items-center justify-center'>
       <h1 className='text-5xl font-semibold my-10'>{t('product')}</h1>
-      <HydrateClient state={dehydrate(queryClient, { shouldDehydrateQuery: () => true })}>
+      <Hydration state={dehydrate(queryClient, { shouldDehydrateQuery: () => true })}>
         <Products queryConfig={queryConfig} />
-      </HydrateClient>
+      </Hydration>
     </div>
   );
 };

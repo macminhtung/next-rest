@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { z } from 'zod';
 import { useTranslations } from 'next-intl';
@@ -10,6 +10,7 @@ import { useZodForm } from '@/components/form/hooks';
 import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
 import { useSignInMutation } from '@/react-query/auth';
+import { AppLoading } from '@/components/AppLoading';
 import { useAppStore } from '@/store';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
 
@@ -26,6 +27,7 @@ const SignInForm = () => {
   const curLocale = useLocale();
   const router = useRouter();
   const setAccessToken = useAppStore((state) => state.setAccessToken);
+  const accessToken = useAppStore((state) => state.accessToken);
 
   const { Form, ItemField } = useZodForm({
     schema: signInSchema,
@@ -46,6 +48,8 @@ const SignInForm = () => {
     },
     [signInMutation]
   );
+
+  if (accessToken) return <AppLoading />;
 
   return (
     <Form onSubmit={onSubmit} className='grid gap-6 w-full max-w-[20rem]'>

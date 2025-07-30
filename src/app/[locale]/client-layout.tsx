@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
 import Header from '@/components/Header';
-import { usePathname } from 'next/navigation';
 import { AppLoading } from '@/components/AppLoading';
 import { useMounted } from '@/common/hooks';
 import { useGetAuthProfileQuery } from '@/react-query/auth';
@@ -10,19 +8,11 @@ import { useAppStore } from '@/store';
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const mounted = useMounted();
-  const pathname = usePathname();
   const setAuthUser = useAppStore((state) => state.setAuthUser);
   const isAppLoading = useAppStore((state) => state.isAppLoading);
   const setIsAppLoading = useAppStore((state) => state.setIsAppLoading);
   const authUser = useAppStore((state) => state.authUser);
   const accessToken = useAppStore((state) => state.accessToken);
-
-  // Show loading page when processing pathname changes
-  useEffect(() => {
-    setIsAppLoading(true);
-    const timeout = setTimeout(() => setIsAppLoading(false), 300);
-    return () => clearTimeout(timeout);
-  }, [pathname, setIsAppLoading]);
 
   // Get authProfile query
   useGetAuthProfileQuery(undefined, {
