@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  images: {
+    remotePatterns: [new URL('https://github.com/shadcn.png')],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin();

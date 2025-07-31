@@ -4,3 +4,5 @@ export type TProduct = {
   name: string;
   description: string;
 };
+
+export type TCreateProduct = Omit<TProduct, 'id'>;

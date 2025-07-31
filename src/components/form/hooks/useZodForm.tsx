@@ -3,7 +3,7 @@
 import { DetailedHTMLProps, FormHTMLAttributes, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { DefaultValues, FieldValues, SubmitHandler, UseFormProps } from 'react-hook-form';
+import type { DefaultValues, FieldValues, UseFormProps } from 'react-hook-form';
 import { FormProvider } from '@/components/ui';
 import { FormFieldC, TItemFieldC } from '@/components/form';
 import type { ZodSchema } from 'zod';
@@ -11,7 +11,7 @@ import type { ZodSchema } from 'zod';
 type TFormProps<T extends FieldValues> = Omit<
   DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>,
   'onSubmit'
-> & { onSubmit: SubmitHandler<T | FieldValues> };
+> & { onSubmit: (v: T) => void };
 
 type TUseZodForm<T extends FieldValues> = UseFormProps<T> & {
   schema: ZodSchema<T>;

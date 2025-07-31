@@ -4,16 +4,16 @@ import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 import type { TUpdateProfilePayload } from '@/react-query/auth';
 
-export const useUpdateProfileMutation = <V extends TUpdateProfilePayload, R extends V>(
-  options?: TUseMutationOptions<V, R>,
+export const useUpdateProfileMutation = <P extends TUpdateProfilePayload, R extends P>(
+  options?: TUseMutationOptions<P, R>,
   queryClient?: QueryClient
 ) =>
   useMutation(
     {
       mutationKey: ['useUpdateProfileMutation'],
-      mutationFn: (variables: V) =>
+      mutationFn: (payload: P) =>
         axiosApi
-          .put<unknown, AxiosResponse<R>, V>('auth/profile', variables)
+          .put<unknown, AxiosResponse<R>, P>('auth/profile', payload)
           .then((data) => data.data),
       ...options,
     },
