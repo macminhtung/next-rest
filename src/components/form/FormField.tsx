@@ -1,5 +1,4 @@
 import type { ElementType, ComponentProps } from 'react';
-import type { ZodSchema } from 'zod';
 import { type Control, FieldPath, FieldValues } from 'react-hook-form';
 import {
   FormControl,
