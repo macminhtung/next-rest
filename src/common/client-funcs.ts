@@ -5,6 +5,7 @@ import type { AxiosError } from 'axios';
 import { toast, type ExternalToast } from 'sonner';
 import { X, CircleX, CircleCheck } from 'lucide-react';
 import { ELocalStorageKey } from '@/common/enums';
+import axios from 'axios';
 
 export const showToastSuccess = (
   message: string,
@@ -62,3 +63,13 @@ export const manageAccessToken = (
   localStorage.setItem(ELocalStorageKey.ACCESS_TOKEN, accessToken);
   return accessToken;
 };
+
+export const uploadImageToS3 = (signedUrl: string, file: File) =>
+  axios
+    .put(signedUrl, file)
+    .then(() => signedUrl.split('?')?.[0])
+    .catch((error) => {
+      error.message = `Upload image failed: ${error.message}`;
+      showToastError(error);
+      return '';
+    });

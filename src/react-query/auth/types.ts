@@ -6,7 +6,6 @@ export type TSignInPayload = {
 export type TSignUpPayload = {
   email: string;
   password: string;
-  avatar: string;
   firstName: string;
   lastName: string;
 };

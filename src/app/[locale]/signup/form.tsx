@@ -14,7 +14,6 @@ import { useSignUpMutation } from '@/react-query/auth';
 const signUpSchema = z
   .object({
     email: z.string().email(),
-    avatar: z.string().nullable().optional(),
     password: z
       .string()
       .min(6, { message: 'Minimum 6 characters' })
@@ -43,7 +42,6 @@ const SignUpForm = () => {
     schema: signUpSchema,
     values: {
       email: '',
-      avatar: '',
       password: '',
       confirmPassword: '',
       firstName: '',
@@ -57,20 +55,14 @@ const SignUpForm = () => {
 
   const onSubmit = useCallback(
     (values: z.infer<typeof signUpSchema>) => {
-      const { avatar, confirmPassword: _, ...rest } = values;
-      signUpMutation.mutate({ avatar: avatar || '', ...rest });
+      const { confirmPassword: _, ...rest } = values;
+      signUpMutation.mutate(rest);
     },
     [signUpMutation]
   );
 
   return (
     <Form onSubmit={onSubmit} className='grid gap-6 w-full max-w-[20rem]'>
-      <ItemField
-        className='flex items-center'
-        iType={EItemFieldType.UPLOAD_IMAGE}
-        label={''}
-        fieldName='avatar'
-      />
       <ItemField iType={EItemFieldType.INPUT} label={t('email')} fieldName='email' />
       <ItemField iType={EItemFieldType.PASSWORD} label={t('password')} fieldName='password' />
       <ItemField
