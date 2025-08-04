@@ -5,7 +5,7 @@ import { useProcessQueryFuncs } from '@/react-query/useProcessQueryFuncs';
 import type { TUseQueryOptions } from '@/react-query/types';
 import type { TAuthUser } from '@/store';
 
-export const useGetAuthProfileQuery = <C extends undefined, R extends TAuthUser>(
+export const useGetProfileQuery = <C extends undefined, R extends TAuthUser>(
   config?: C,
   options?: TUseQueryOptions<R>,
   queryClient?: QueryClient
@@ -13,7 +13,7 @@ export const useGetAuthProfileQuery = <C extends undefined, R extends TAuthUser>
   useProcessQueryFuncs<R>(
     useQuery(
       {
-        queryKey: ['useGetAuthProfileQuery', config],
+        queryKey: ['useGetProfileQuery'],
         queryFn: () =>
           axiosApi
             .get<unknown, AxiosResponse<R>, C>('auth/profile', config)

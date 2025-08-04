@@ -3,7 +3,7 @@
 import Header from '@/components/Header';
 import { AppLoading } from '@/components/AppLoading';
 import { useMounted } from '@/common/hooks';
-import { useGetAuthProfileQuery } from '@/react-query/auth';
+import { useGetProfileQuery } from '@/react-query/auth';
 import { useAppStore } from '@/store';
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
@@ -15,7 +15,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const accessToken = useAppStore((state) => state.accessToken);
 
   // Get authProfile query
-  useGetAuthProfileQuery(undefined, {
+  useGetProfileQuery(undefined, {
     onSuccess: (data) => setAuthUser(data),
     onLoading: (isLoading) => setIsAppLoading(isLoading),
     enabled: !!accessToken && !authUser.id,

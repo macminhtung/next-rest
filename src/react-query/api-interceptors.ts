@@ -40,12 +40,16 @@ axiosApi.interceptors.response.use(
 
     // CASE: JWT Expired ==> Refresh accessToken ==> Recall API
     if (errorMessage === JWT_ERRORS.EXPIRED) {
-      const refreshToken = manageAccessToken({ type: EManageTokenType.GET });
+      const accessToken = manageAccessToken({ type: EManageTokenType.GET });
 
       return (
-        axiosApi
-          .post('/auth/refresh-token', { refreshToken })
-          // CASE: Update new refreshToken & accessToken
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+            { accessToken },
+            { withCredentials: true }
+          )
+          // CASE: Refresh a new accessToken
           .then(({ data }) => {
             const newAccessToken = data.accessToken;
             const originalConfig = error.config!;
@@ -78,6 +82,16 @@ axiosApi.interceptors.response.use(
                   return Promise.reject(reError);
                 })
             );
+          })
+
+          // Case refresh token error
+          .catch((refreshError) => {
+            showToastError(refreshError, {
+              duration: 1500,
+              onAutoClose: () => clearTokensAndNavigateSignInPage(),
+            });
+
+            return Promise.reject(refreshError);
           })
       );
     }
