@@ -20,3 +20,5 @@ export type TUpdateProfilePayload = {
   firstName: string;
   lastName: string;
 };
+
+export type TGeneratePreSignedUrl = { contentType: string; filename: string };

@@ -1,5 +1,4 @@
 import { useQuery, type QueryClient } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 import { useProcessQueryFuncs } from '@/react-query/useProcessQueryFuncs';
 import type { TUseQueryOptions } from '@/react-query/types';
@@ -14,10 +13,7 @@ export const useGetProfileQuery = <C extends undefined, R extends TAuthUser>(
     useQuery(
       {
         queryKey: ['useGetProfileQuery'],
-        queryFn: () =>
-          axiosApi
-            .get<unknown, AxiosResponse<R>, C>('auth/profile', config)
-            .then((data) => data.data),
+        queryFn: () => axiosApi.get<unknown, R, C>('auth/profile', config),
         ...options,
       },
       queryClient

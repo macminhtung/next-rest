@@ -1,6 +1,5 @@
 import { useMutation, QueryClient } from '@tanstack/react-query';
 import type { TUseMutationOptions } from '@/react-query/types';
-import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 import type { TSignInPayload } from '@/react-query/auth';
 
@@ -13,10 +12,8 @@ export const useSignInMutation = <P extends TSignInPayload, R extends TSignInRes
   useMutation(
     {
       mutationKey: ['useSignInMutation'],
-      mutationFn: (payload: P) =>
-        axiosApi
-          .post<unknown, AxiosResponse<R>, P>('auth/signin', payload)
-          .then((data) => data.data),
+      mutationFn: (payload: P) => axiosApi.post<unknown, R, P>('auth/signin', payload),
+
       ...options,
     },
     queryClient

@@ -33,7 +33,7 @@ axiosApi.interceptors.request.use((config) => {
 });
 
 axiosApi.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,
   async (error: AxiosError<{ message: string }>) => {
     // Identify the error message
     const errorMessage = error.response?.data?.message || '';
@@ -70,12 +70,11 @@ axiosApi.interceptors.response.use(
                   const reErrorMessage = reError.response?.data?.message || '';
 
                   // CASE: JWT invalid
-                  if (isJwtInvalid(reErrorMessage)) {
+                  if (isJwtInvalid(reErrorMessage))
                     throw showToastError(error, {
                       duration: 1500,
                       onAutoClose: () => clearTokensAndNavigateSignInPage(),
                     });
-                  }
 
                   // Show toast error
                   showToastError(reError);

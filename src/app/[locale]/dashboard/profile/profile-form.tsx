@@ -7,7 +7,7 @@ import { useZodForm } from '@/components/form/hooks';
 import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
 import { useAppStore } from '@/store';
-import { useUpdateProfileMutation, useGeneratePreSignedUrlMutation } from '@/react-query/auth';
+import { useUpdateProfileMutation } from '@/react-query/auth';
 import { showToastSuccess } from '@/common/client-funcs';
 import { uploadImageToS3 } from '@/common/client-funcs';
 
@@ -29,27 +29,12 @@ const ProfileForm = () => {
     values: authUser,
   });
 
-  const generatePreSignedUrlMutation = useGeneratePreSignedUrlMutation();
-
   const updateProfileMutation = useUpdateProfileMutation({
     onSuccess: (data) => {
       setAuthUser({ ...authUser, ...data });
       showToastSuccess(t('updatedSuccessfully'));
     },
   });
-
-  const onUploadAvatar = useCallback(
-    async (file: File) => {
-      // Generate presignedUrl
-      const preSignedUrl = await generatePreSignedUrlMutation.mutateAsync({
-        contentType: file.type,
-        filename: file.name,
-      });
-
-      return await uploadImageToS3(preSignedUrl, file);
-    },
-    [generatePreSignedUrlMutation]
-  );
 
   const onSubmit = useCallback(
     (values: z.infer<typeof profileSchema>) => {
@@ -66,7 +51,7 @@ const ProfileForm = () => {
         iType={EItemFieldType.UPLOAD_IMAGE}
         label={''}
         fieldName='avatar'
-        iProps={{ onUpload: onUploadAvatar }}
+        iProps={{ onUpload: uploadImageToS3 }}
       />
       <ItemField
         iType={EItemFieldType.INPUT}

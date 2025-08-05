@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery, type QueryClient } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 import { useProcessQueryFuncs } from '@/react-query/useProcessQueryFuncs';
 import type {
@@ -24,10 +23,7 @@ export const useGetPaginatedProductsQuery = <
     useQuery(
       {
         queryKey: ['useGetPaginatedProductsQuery', config],
-        queryFn: () =>
-          axiosApi
-            .get<unknown, AxiosResponse<R>, TGetPaginatedRecords>('product/paginated', config)
-            .then((data) => data.data),
+        queryFn: () => axiosApi.get<unknown, R, TGetPaginatedRecords>('product/paginated', config),
         ...options,
       },
       queryClient

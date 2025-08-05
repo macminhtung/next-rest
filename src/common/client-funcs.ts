@@ -1,11 +1,13 @@
 'use client';
 
 import { createElement } from 'react';
-import type { AxiosError } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import { toast, type ExternalToast } from 'sonner';
 import { X, CircleX, CircleCheck } from 'lucide-react';
 import { ELocalStorageKey } from '@/common/enums';
 import axios from 'axios';
+import { axiosApi } from '@/react-query/api-interceptors';
+import type { TGeneratePreSignedUrl } from '@/react-query/auth';
 
 export const showToastSuccess = (
   message: string,
@@ -64,12 +66,23 @@ export const manageAccessToken = (
   return accessToken;
 };
 
-export const uploadImageToS3 = (signedUrl: string, file: File) =>
-  axios
-    .put(signedUrl, file)
-    .then(() => signedUrl.split('?')?.[0])
+export const uploadImageToS3 = async (file: File) => {
+  // Call API to generate the preSignedUrl
+  const preSignedUrl = await axiosApi
+    .post<
+      unknown,
+      AxiosResponse<string>,
+      TGeneratePreSignedUrl
+    >('auth/presigned-url', { contentType: file.type, filename: file.name })
+    .then((data) => data.data);
+
+  // Upload image to S3 based on preSignedUrl
+  return axios
+    .put(preSignedUrl, file)
+    .then(() => preSignedUrl.split('?')?.[0])
     .catch((error) => {
       error.message = `Upload image failed: ${error.message}`;
       showToastError(error);
       return '';
     });
+};
