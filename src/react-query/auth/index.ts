@@ -5,4 +5,4 @@ export * from './useSignOutMutation';
 export * from './useGetProfileQuery';
 export * from './useUpdateProfileMutation';
 export * from './useUpdatePasswordMutation';
-export * from './useCreateSignedUrlMutation';
+export * from './useGeneratePreSignedUrlMutation';

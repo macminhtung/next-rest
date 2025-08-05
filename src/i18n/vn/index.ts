@@ -15,6 +15,7 @@ export const vnTranslation = {
   avatar: 'Ảnh đại diện',
   firstName: 'Tên',
   lastName: 'Họ',
+  uploading: 'Đang tải lên',
   createdSuccessfully: 'Đã tạo thành công',
   updatedSuccessfully: 'Đã cập nhật thành công',
   deletedSuccessfully: 'Đã xóa thành công',

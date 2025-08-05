@@ -7,7 +7,7 @@ import { useZodForm } from '@/components/form/hooks';
 import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
 import { useAppStore } from '@/store';
-import { useUpdateProfileMutation, useCreateSignedUrlMutation } from '@/react-query/auth';
+import { useUpdateProfileMutation, useGeneratePreSignedUrlMutation } from '@/react-query/auth';
 import { showToastSuccess } from '@/common/client-funcs';
 import { uploadImageToS3 } from '@/common/client-funcs';
 
@@ -29,7 +29,7 @@ const ProfileForm = () => {
     values: authUser,
   });
 
-  const createSignedUrlMutation = useCreateSignedUrlMutation();
+  const generatePreSignedUrlMutation = useGeneratePreSignedUrlMutation();
 
   const updateProfileMutation = useUpdateProfileMutation({
     onSuccess: (data) => {
@@ -40,15 +40,15 @@ const ProfileForm = () => {
 
   const onUploadAvatar = useCallback(
     async (file: File) => {
-      // Create signedUrl
-      const signedUrl = await createSignedUrlMutation.mutateAsync({
+      // Generate presignedUrl
+      const preSignedUrl = await generatePreSignedUrlMutation.mutateAsync({
         contentType: file.type,
         filename: file.name,
       });
 
-      return await uploadImageToS3(signedUrl, file);
+      return await uploadImageToS3(preSignedUrl, file);
     },
-    [createSignedUrlMutation]
+    [generatePreSignedUrlMutation]
   );
 
   const onSubmit = useCallback(

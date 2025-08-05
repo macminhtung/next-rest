@@ -15,6 +15,7 @@ export const enTranslation = {
   avatar: 'Avatar',
   firstName: 'First name',
   lastName: 'Last name',
+  uploading: 'Uploading',
   createdSuccessfully: 'Created successfully',
   updatedSuccessfully: 'Updated successfully',
   deletedSuccessfully: 'Deleted successfully',

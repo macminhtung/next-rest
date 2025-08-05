@@ -3,18 +3,18 @@ import type { TUseMutationOptions } from '@/react-query/types';
 import type { AxiosResponse } from 'axios';
 import { axiosApi } from '@/react-query/api-interceptors';
 
-export type TCreateSignedUrl = { contentType: string; filename: string };
+export type TGeneratePreSignedUrl = { contentType: string; filename: string };
 
-export const useCreateSignedUrlMutation = <P extends TCreateSignedUrl, R extends string>(
+export const useGeneratePreSignedUrlMutation = <P extends TGeneratePreSignedUrl, R extends string>(
   options?: TUseMutationOptions<P, R>,
   queryClient?: QueryClient
 ) =>
   useMutation(
     {
-      mutationKey: ['useCreateSignedUrlMutation'],
+      mutationKey: ['useGeneratePreSignedUrlMutation'],
       mutationFn: (payload: P) =>
         axiosApi
-          .post<unknown, AxiosResponse<R>, P>('auth/signed-url', payload)
+          .post<unknown, AxiosResponse<R>, P>('auth/presigned-url', payload)
           .then((data) => data.data),
       ...options,
     },
