@@ -13,7 +13,6 @@ export const useSignInMutation = <P extends TSignInPayload, R extends TSignInRes
     {
       mutationKey: ['useSignInMutation'],
       mutationFn: (payload: P) => axiosApi.post<unknown, R, P>('auth/signin', payload),
-
       ...options,
     },
     queryClient
