@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
@@ -151,4 +151,4 @@ const Header = () => {
   );
 };
 
-export default memo(Header);
+export default Header;
