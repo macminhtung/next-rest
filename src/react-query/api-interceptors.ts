@@ -14,12 +14,16 @@ const JWT_ERRORS = {
   INVALID_SIGNATURE: 'invalid signature',
   UNEXPECTED_TOKEN: 'Unexpected token',
   TIMESTAMP_INCORRECT: 'Timestamp incorrect',
+  ACCESS_TOKEN_INVALID: 'Access token invalid',
 };
 
 const isJwtInvalid = (errorMessage: string) =>
-  [JWT_ERRORS.INVALID_TOKEN, JWT_ERRORS.INVALID_SIGNATURE, JWT_ERRORS.TIMESTAMP_INCORRECT].includes(
-    errorMessage
-  ) || errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
+  [
+    JWT_ERRORS.INVALID_TOKEN,
+    JWT_ERRORS.INVALID_SIGNATURE,
+    JWT_ERRORS.TIMESTAMP_INCORRECT,
+    JWT_ERRORS.ACCESS_TOKEN_INVALID,
+  ].includes(errorMessage) || errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
 
 export const axiosApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -70,14 +74,16 @@ axiosApi.interceptors.response.use(
                   const reErrorMessage = reError.response?.data?.message || '';
 
                   // CASE: JWT invalid
-                  if (isJwtInvalid(reErrorMessage))
+                  if (isJwtInvalid(reErrorMessage)) {
                     throw showToastError(error, {
                       duration: 1500,
                       onAutoClose: () => clearTokensAndNavigateSignInPage(),
                     });
+                  }
 
                   // Show toast error
-                  showToastError(reError);
+                  else showToastError(reError);
+
                   return Promise.reject(reError);
                 })
             );
@@ -85,10 +91,7 @@ axiosApi.interceptors.response.use(
 
           // Case refresh token error
           .catch((refreshError) => {
-            showToastError(refreshError, {
-              duration: 1500,
-              onAutoClose: () => clearTokensAndNavigateSignInPage(),
-            });
+            showToastError(refreshError);
 
             return Promise.reject(refreshError);
           })
@@ -96,14 +99,15 @@ axiosApi.interceptors.response.use(
     }
 
     // CASE: JWT invalid
-    else if (isJwtInvalid(errorMessage))
+    else if (isJwtInvalid(errorMessage)) {
       throw showToastError(error, {
         duration: 1500,
         onAutoClose: () => clearTokensAndNavigateSignInPage(),
       });
+    }
 
     // Show toast error
-    showToastError(error);
+    else showToastError(error);
     return Promise.reject(error);
   }
 );

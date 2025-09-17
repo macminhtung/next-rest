@@ -15,7 +15,8 @@ const ProductPage = async () => {
     queryFn: () =>
       axios
         .get(`${process.env.NEXT_PUBLIC_API_URL}/product/paginated`, queryConfig)
-        .then((res) => res.data),
+        .then((res) => res.data)
+        .catch((error) => new Error(error.message)),
   });
 
   return (
