@@ -15,7 +15,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   const accessToken = useAppStore((state) => state.accessToken);
 
   // Get authProfile query
-  useGetProfileQuery(undefined, {
+  useGetProfileQuery({
     onSuccess: (data) => setAuthUser(data),
     onLoading: (isLoading) => setIsAppLoading(isLoading),
     enabled: !!accessToken && !authUser.id,

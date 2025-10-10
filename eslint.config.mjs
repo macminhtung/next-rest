@@ -20,6 +20,7 @@ const eslintConfig = [
   ...compat.config({
     rules: {
       ...prettier.rules,
+      '@typescript-eslint/no-empty-object-type': 0,
       'prettier/prettier': 'error',
       '@typescript-eslint/no-unused-vars': 'warn',
     },

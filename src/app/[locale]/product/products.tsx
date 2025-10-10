@@ -36,7 +36,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
   });
 
   const deleteProductMutation = useDeleteProductMutation({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['useGetPaginatedProductsQuery'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['GetPaginatedProducts'] }),
   });
 
   const headers = useMemo(() => {

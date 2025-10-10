@@ -33,14 +33,14 @@ const ProductForm = (props: TProductForm) => {
 
   const createProductMutation = useCreateProductMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['useGetPaginatedProductsQuery'] });
+      queryClient.invalidateQueries({ queryKey: ['GetPaginatedProducts'] });
       closeDialog();
     },
   });
 
   const updateProductMutation = useUpdateProductMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['useGetPaginatedProductsQuery'] });
+      queryClient.invalidateQueries({ queryKey: ['GetPaginatedProducts'] });
       closeDialog();
     },
   });

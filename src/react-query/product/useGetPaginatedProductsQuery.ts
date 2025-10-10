@@ -11,6 +11,12 @@ import type {
 } from '@/react-query/types';
 import type { TProduct } from '@/react-query/product/types';
 
+declare module '@/react-query/types' {
+  interface QueryKey {
+    GetPaginatedProducts: ['GetPaginatedProducts'];
+  }
+}
+
 export const useGetPaginatedProductsQuery = <
   C extends TRequestConfig<TGetPaginatedRecords>,
   R extends TPaginatedRecordsResponse<TProduct>,
@@ -22,7 +28,7 @@ export const useGetPaginatedProductsQuery = <
   useProcessQueryFuncs<R>(
     useQuery(
       {
-        queryKey: ['useGetPaginatedProductsQuery', config],
+        queryKey: ['GetPaginatedProducts', config],
         queryFn: () => axiosApi.get<unknown, R, TGetPaginatedRecords>('product/paginated', config),
         ...options,
       },

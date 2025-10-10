@@ -11,7 +11,7 @@ const ProductPage = async () => {
   const queryClient = new QueryClient();
   const queryConfig: TRequestConfig<TGetPaginatedRecords> = { params: { page: 1, take: 5 } };
   await queryClient.prefetchQuery({
-    queryKey: ['useGetPaginatedProductsQuery', queryConfig],
+    queryKey: ['GetPaginatedProducts', queryConfig],
     queryFn: () =>
       axios
         .get(`${process.env.NEXT_PUBLIC_API_URL}/product/paginated`, queryConfig)
