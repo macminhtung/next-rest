@@ -16,8 +16,8 @@ const JWT_ERRORS = {
   INVALID_TOKEN: 'invalid token',
   INVALID_SIGNATURE: 'invalid signature',
   UNEXPECTED_TOKEN: 'Unexpected token',
-  TIMESTAMP_INCORRECT: 'Timestamp incorrect',
   ACCESS_TOKEN_INVALID: 'Access token invalid',
+  REFRESH_TOKEN_INVALID: 'Refresh token invalid',
 };
 
 // #===================================#
@@ -27,9 +27,10 @@ const isJwtInvalid = (errorMessage: string) =>
   [
     JWT_ERRORS.INVALID_TOKEN,
     JWT_ERRORS.INVALID_SIGNATURE,
-    JWT_ERRORS.TIMESTAMP_INCORRECT,
+    JWT_ERRORS.UNEXPECTED_TOKEN,
     JWT_ERRORS.ACCESS_TOKEN_INVALID,
-  ].includes(errorMessage) || errorMessage.includes(JWT_ERRORS.UNEXPECTED_TOKEN);
+    JWT_ERRORS.REFRESH_TOKEN_INVALID,
+  ].includes(errorMessage);
 
 // #============================#
 // # ==> AXIOS INSTANCE API <== #
@@ -59,14 +60,34 @@ const processFailedQueue = (
   failedQueue = [];
 };
 
-// #=================================#
-// # ==> RESET ACCESS TOKEN FUNC <== #
-// #=================================#
+// #==================================#
+// # ==> PROCESS AXIOS ERROR FUNC <== #
+// #==================================#
+const processAxiosError = (error: AxiosError<{ message: string }>) => {
+  const errorMessage = error.response?.data?.message || '';
+
+  // CASE: JWT INVALID ==> SIGNOUT
+  if (isJwtInvalid(errorMessage)) {
+    showToastError(error, {
+      duration: 1500,
+      onAutoClose: () => clearTokensAndNavigateSignInPage(),
+    });
+  }
+
+  // CASE: SHOW MESSAGE ERROR
+  else showToastError(error);
+
+  return Promise.reject(error);
+};
+
+// #================================#
+// # ==> RESET ACCESS TOKEN API <== #
+// #================================#
 const refreshAccessToken = async () => {
   const currentAccessToken = manageAccessToken({ type: EManageTokenType.GET });
 
   const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-access-token`,
     { accessToken: currentAccessToken },
     { withCredentials: true }
   );
@@ -95,7 +116,7 @@ axiosApi.interceptors.request.use((config) => {
 axiosApi.interceptors.response.use(
   (response) => response.data,
   async (error: AxiosError<{ message: string }>) => {
-    const errorMessage = error.response?.data?.message ?? '';
+    const errorMessage = error.response?.data?.message || '';
     const originalRequest = error.config!;
 
     // CASE: TOKEN EXPIRED
@@ -117,18 +138,18 @@ axiosApi.interceptors.response.use(
       isRefreshing = true;
 
       return refreshAccessToken()
-        .then((newToken) => {
+        .then((newToken: string) => {
           processFailedQueue(null, newToken);
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return axios(originalRequest);
+          return axios(originalRequest)
+            .then((res) => res.data)
+            .catch((originError) => processAxiosError(originError));
         })
         .catch((refreshError: AxiosError<{ message: string }>) => {
           processFailedQueue(refreshError, null);
-          showToastError(refreshError, {
-            duration: 1500,
-            onAutoClose: () => clearTokensAndNavigateSignInPage(),
-          });
-          return Promise.reject(refreshError);
+
+          // PROCESS REFRESH ERROR
+          return processAxiosError(refreshError);
         })
         .finally(() => {
           // Clear isRefreshing flag
@@ -136,17 +157,7 @@ axiosApi.interceptors.response.use(
         });
     }
 
-    // CASE: JWT INVALID ==> SIGNOUT
-    if (isJwtInvalid(errorMessage)) {
-      showToastError(error, {
-        duration: 1500,
-        onAutoClose: () => clearTokensAndNavigateSignInPage(),
-      });
-      return Promise.reject(error);
-    }
-
-    // CASE: SHOW MESSAGE ERROR
-    showToastError(error);
-    return Promise.reject(error);
+    // PROCESS ERROR
+    return processAxiosError(error);
   }
 );
