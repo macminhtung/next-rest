@@ -22,6 +22,10 @@ const changePasswordSchema = z
       .max(20, { message: 'Maximum 20 characters' }),
     confirmPassword: z.string(),
   })
+  .refine((data) => data.newPassword !== data.oldPassword, {
+    message: 'Password reused',
+    path: ['newPassword'],
+  })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
     path: ['confirmPassword'],

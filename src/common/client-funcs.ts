@@ -28,16 +28,18 @@ export const showToastError = (
   error: AxiosError<{ message: string }>,
   options?: Omit<ExternalToast, 'action' | 'actionButtonStyle'>
 ) => {
-  toast.error(error?.response?.data?.message || error?.message, {
-    action: {
-      label: createElement(X, { className: 'w-5 text-gray-700 dark:text-white' }),
-      onClick: () => null,
-    },
-    actionButtonStyle: { backgroundColor: 'transparent' },
-    duration: 2500,
-    icon: createElement(CircleX, { className: 'w-5 text-red-500' }),
-    ...options,
-  });
+  const errorMessage = error?.response?.data?.message || error?.message;
+  if (errorMessage)
+    toast.error(errorMessage, {
+      action: {
+        label: createElement(X, { className: 'w-5 text-gray-700 dark:text-white' }),
+        onClick: () => null,
+      },
+      actionButtonStyle: { backgroundColor: 'transparent' },
+      duration: 2500,
+      icon: createElement(CircleX, { className: 'w-5 text-red-500' }),
+      ...options,
+    });
 };
 
 export const clearTokensAndNavigateSignInPage = () => {

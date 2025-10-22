@@ -67,23 +67,20 @@ const processAxiosError = (error: AxiosError<{ message: string }>) => {
   const errorMessage = error.response?.data?.message || '';
 
   // CASE: JWT INVALID ==> SIGNOUT
-  if (isJwtInvalid(errorMessage)) {
+  if (isJwtInvalid(errorMessage))
     showToastError(error, {
       duration: 1500,
       onAutoClose: () => clearTokensAndNavigateSignInPage(),
     });
-  }
 
   // CASE: SHOW MESSAGE ERROR
-  else showToastError(error);
-
-  return Promise.reject(error);
+  showToastError(error);
 };
 
 // #================================#
 // # ==> RESET ACCESS TOKEN API <== #
 // #================================#
-const refreshAccessToken = async () => {
+const refreshAccessToken = async (): Promise<string> => {
   const currentAccessToken = manageAccessToken({ type: EManageTokenType.GET });
 
   const { data } = await axios.post(
@@ -138,18 +135,23 @@ axiosApi.interceptors.response.use(
       isRefreshing = true;
 
       return refreshAccessToken()
-        .then((newToken: string) => {
+        .then((newToken) => {
           processFailedQueue(null, newToken);
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return axios(originalRequest)
             .then((res) => res.data)
-            .catch((originError) => processAxiosError(originError));
+            .catch((originError) => {
+              processAxiosError(originError);
+              return Promise.reject(null);
+            });
         })
         .catch((refreshError: AxiosError<{ message: string }>) => {
           processFailedQueue(refreshError, null);
 
           // PROCESS REFRESH ERROR
-          return processAxiosError(refreshError);
+          processAxiosError(refreshError);
+
+          return Promise.reject(refreshError);
         })
         .finally(() => {
           // Clear isRefreshing flag
@@ -158,6 +160,8 @@ axiosApi.interceptors.response.use(
     }
 
     // PROCESS ERROR
-    return processAxiosError(error);
+    else processAxiosError(error);
+
+    return Promise.reject(error);
   }
 );
