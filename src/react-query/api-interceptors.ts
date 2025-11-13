@@ -38,15 +38,17 @@ const isJwtInvalid = (errorMessage: string) =>
 const processAxiosError = (error: AxiosError<{ message: string }>) => {
   const errorMessage = error.response?.data?.message || '';
 
-  // CASE: JWT INVALID ==> SIGNOUT
-  if (isJwtInvalid(errorMessage))
-    showToastError(error, {
-      duration: 1500,
-      onAutoClose: () => clearTokensAndNavigateSignInPage(),
-    });
+  if (errorMessage) {
+    // CASE: JWT INVALID ==> SIGNOUT
+    if (isJwtInvalid(errorMessage))
+      showToastError(error, {
+        duration: 1500,
+        onAutoClose: () => clearTokensAndNavigateSignInPage(),
+      });
 
-  // CASE: SHOW MESSAGE ERROR
-  showToastError(error);
+    // CASE: SHOW MESSAGE ERROR
+    showToastError(error);
+  }
 };
 
 // #============================#
