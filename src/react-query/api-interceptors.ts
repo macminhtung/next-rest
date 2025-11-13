@@ -32,6 +32,23 @@ const isJwtInvalid = (errorMessage: string) =>
     JWT_ERRORS.REFRESH_TOKEN_INVALID,
   ].includes(errorMessage);
 
+// #=============================#
+// # ==> PROCESS AXIOS ERROR <== #
+// #=============================#
+const processAxiosError = (error: AxiosError<{ message: string }>) => {
+  const errorMessage = error.response?.data?.message || '';
+
+  // CASE: JWT INVALID ==> SIGNOUT
+  if (isJwtInvalid(errorMessage))
+    showToastError(error, {
+      duration: 1500,
+      onAutoClose: () => clearTokensAndNavigateSignInPage(),
+    });
+
+  // CASE: SHOW MESSAGE ERROR
+  showToastError(error);
+};
+
 // #============================#
 // # ==> AXIOS INSTANCE API <== #
 // #============================#
@@ -49,32 +66,15 @@ let failedQueue: {
   reject: (error: AxiosError<{ message: string }>) => void;
 }[] = [];
 
-// #===================================#
-// # ==> PROCESS FAILED QUEUE FUNC <== #
-// #===================================#
+// #==============================#
+// # ==> PROCESS FAILED QUEUE <== #
+// #==============================#
 const processFailedQueue = (
   error: AxiosError<{ message: string }> | null,
   token: string | null = null
 ) => {
   failedQueue.forEach((prom) => (error ? prom.reject(error) : prom.resolve(token!)));
   failedQueue = [];
-};
-
-// #==================================#
-// # ==> PROCESS AXIOS ERROR FUNC <== #
-// #==================================#
-const processAxiosError = (error: AxiosError<{ message: string }>) => {
-  const errorMessage = error.response?.data?.message || '';
-
-  // CASE: JWT INVALID ==> SIGNOUT
-  if (isJwtInvalid(errorMessage))
-    showToastError(error, {
-      duration: 1500,
-      onAutoClose: () => clearTokensAndNavigateSignInPage(),
-    });
-
-  // CASE: SHOW MESSAGE ERROR
-  showToastError(error);
 };
 
 // #================================#
