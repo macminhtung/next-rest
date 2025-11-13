@@ -29,7 +29,11 @@ export const useGetPaginatedProductsQuery = <
     useQuery(
       {
         queryKey: ['GetPaginatedProducts', config],
-        queryFn: () => axiosApi.get<unknown, R, TGetPaginatedRecords>('product/paginated', config),
+        queryFn: ({ signal }) =>
+          axiosApi.get<unknown, R, TGetPaginatedRecords>('product/paginated', {
+            ...config,
+            signal,
+          }),
         ...options,
       },
       queryClient

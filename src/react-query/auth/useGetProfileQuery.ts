@@ -18,7 +18,7 @@ export const useGetProfileQuery = <R extends TAuthUser>(
     useQuery(
       {
         queryKey: ['GetProfile'],
-        queryFn: () => axiosApi.get<unknown, R>('auth/profile'),
+        queryFn: ({ signal }) => axiosApi.get<unknown, R>('auth/profile', { signal }),
         ...options,
       },
       queryClient
