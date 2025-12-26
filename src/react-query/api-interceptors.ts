@@ -79,9 +79,9 @@ const processFailedQueue = (
   failedQueue = [];
 };
 
-// #================================#
-// # ==> RESET ACCESS TOKEN API <== #
-// #================================#
+// #==================================#
+// # ==> REFRESH ACCESS TOKEN API <== #
+// #==================================#
 const refreshAccessToken = async (): Promise<string> => {
   const currentAccessToken = manageAccessToken({ type: EManageTokenType.GET });
 

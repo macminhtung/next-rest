@@ -9,7 +9,7 @@ export const useSignOutMutation = <P extends undefined, R extends string>(
   useMutation(
     {
       mutationKey: ['useSignOutMutation'],
-      mutationFn: (payload: P) => axiosApi.delete<unknown, R, P>('auth/signout', payload),
+      mutationFn: (payload: P) => axiosApi.post<unknown, R, P>('auth/signout', payload),
       ...options,
     },
     queryClient
