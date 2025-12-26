@@ -51,7 +51,8 @@ const PasswordForm = () => {
 
   const onSubmit = useCallback(
     (values: z.infer<typeof changePasswordSchema>) => {
-      updateProfileMutation.mutate(values);
+      const { oldPassword, newPassword } = values;
+      updateProfileMutation.mutateAsync({ oldPassword, newPassword });
     },
     [updateProfileMutation]
   );
