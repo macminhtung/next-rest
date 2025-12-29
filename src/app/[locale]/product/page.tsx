@@ -20,8 +20,8 @@ const ProductPage = async () => {
   });
 
   return (
-    <div className='flex flex-col h-full w-full items-center justify-center'>
-      <h1 className='text-5xl font-semibold my-10'>{t('product')}</h1>
+    <div className='flex flex-col h-full w-full md:items-center justify-center'>
+      <p className='text-3xl md:text-5xl font-semibold my-4 md:my-10'>{t('product')}</p>
       <Hydration state={dehydrate(queryClient, { shouldDehydrateQuery: () => true })}>
         <Products queryConfig={queryConfig} />
       </Hydration>

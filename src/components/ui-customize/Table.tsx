@@ -87,7 +87,7 @@ export const TableC = <
       )}
       <Table>
         <TableHeader className='h-12'>
-          <TableRow className='[&>*]:whitespace-nowrap sticky top-0 !bg-background shadow z-10'>
+          <TableRow className='*:whitespace-nowrap sticky top-0 bg-background! shadow z-10'>
             {headers.map((item, idx) => (
               <TableHead
                 key={`${idx}-${String(item.key)}`}
@@ -108,7 +108,7 @@ export const TableC = <
         </TableHeader>
         <TableBody>
           {rowRecords.map((record, idxR) => (
-            <TableRow key={idxR} className='odd:bg-muted/50 [&>*]:whitespace-nowrap h-11'>
+            <TableRow key={idxR} className='odd:bg-muted/50 *:whitespace-nowrap h-11'>
               {headers.map((header, idxH) => (
                 <TableCell key={String(header.key)} className={cn(!idxH && 'pl-4')}>
                   {selectMode && header.key === rowKey && (

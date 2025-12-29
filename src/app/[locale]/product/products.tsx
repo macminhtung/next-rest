@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useAppStore } from '@/store';
-import { useDebounce } from '@/common/hooks';
+import { useDebounce, useScreen } from '@/common/hooks';
 import { Pencil, X, Plus, Search } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -30,6 +30,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
   const [params, setParams] = useState<TGetPaginatedRecords>(queryConfig.params);
   const authUser = useAppStore((state) => state.authUser);
   const isAdmin = useMemo(() => authUser.roleId === 1, [authUser.roleId]);
+  const { md } = useScreen();
 
   const { data, isLoading } = useGetPaginatedProductsQuery({
     params: { ...params, keySearch: debounceKeySearch },
@@ -45,7 +46,10 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         key: 'image',
         title: 'Image',
         render: (record) => (
-          <AvatarC src={record.image || '/product.png'} className='rounded-md size-[50px] p-1' />
+          <AvatarC
+            src={record.image || '/product.png'}
+            className='rounded-none size-14 p-1 border-0'
+          />
         ),
       },
       { key: 'name', title: 'Name' },
@@ -55,7 +59,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
     if (isAdmin)
       initHeaders.push({
         key: 'id',
-        title: 'Action',
+        title: '',
         width: '120px',
         render: (record) => (
           <div className='flex gap-3'>
@@ -84,8 +88,13 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         <div className='flex gap-5'>
           <ButtonC className='mb-5 w-fit' onClick={() => setFormValues(initFormValues)}>
             <Plus />
-            Create product
+            <p className='max-sm:hidden '>Create product</p>
           </ButtonC>
+          <InputC
+            className='w-full'
+            startItem={<Search className='ml-2 size-4' />}
+            onChange={(e) => setKeySearch(e.target.value)}
+          />
           <DialogC
             open={!!formValues}
             onOpenChange={() => setFormValues(null)}
@@ -96,20 +105,37 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
               <ProductForm formValues={formValues} closeDialog={() => setFormValues(null)} />
             )}
           </DialogC>
-          <InputC
-            startItem={<Search className='ml-2 size-4' />}
-            onChange={(e) => setKeySearch(e.target.value)}
-          />
         </div>
       )}
-      <TableC
-        loading={isLoading}
-        headers={headers}
-        className='[&>div]:max-h-[300px]'
-        rowKey='name'
-        rowRecords={records}
-        pagination={{ page, total, take, setPagination: setParams }}
-      />
+      {md ? (
+        <TableC
+          loading={isLoading}
+          headers={headers}
+          className='[&>div]:max-h-75'
+          rowKey='name'
+          rowRecords={records}
+          pagination={{ page, total, take, setPagination: setParams }}
+        />
+      ) : (
+        <div className='grid grid-cols-1 gap-8 mt-5 sm:grid-cols-2'>
+          {records.map((record) => (
+            <div key={record.id} className='flex flex-col gap-3 items-center border p-5 rounded-md'>
+              <AvatarC
+                src={record.image || '/product.png'}
+                className='rounded-none size-20 border-0'
+              />
+              <div className='flex gap-3'>
+                <p>Name:</p>
+                <p>{record.name}</p>
+              </div>
+              <div className='flex gap-3'>
+                <p>Description:</p>
+                <p>{record.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

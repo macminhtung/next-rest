@@ -11,7 +11,7 @@ export const InputC = (props: TInputCProps) => {
   const { className, startItem, endItem, ...rest } = props;
 
   return (
-    <div className='relative flex h-fit'>
+    <div className='relative flex h-fit w-full'>
       {startItem && (
         <div className='absolute flex h-full items-center justify-center left-0'>{startItem}</div>
       )}
@@ -19,7 +19,7 @@ export const InputC = (props: TInputCProps) => {
         className={`${startItem && 'pl-10'} ${endItem && 'pr-10'} ${className} min-h-10`}
         {...rest}
       />
-      {endItem && <div className='absolute top-[13px] right-[12px] cursor-pointer'>{endItem}</div>}
+      {endItem && <div className='absolute top-3.25 right-3 cursor-pointer'>{endItem}</div>}
     </div>
   );
 };
