@@ -58,14 +58,14 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         render: (record) => (
           <div className='flex gap-3'>
             <ButtonC variant={'outline'} onClick={() => setFormValues(record)}>
-              <Pencil className='scale-[1.3]' />
+              <Pencil className='size-4' />
             </ButtonC>
             <ButtonC
               variant={'outline'}
               className='text-red-500'
               onClick={() => deleteProductMutation.mutate(record.id)}
             >
-              <X className='scale-[1.3]' />
+              <X className='size-4' />
             </ButtonC>
           </div>
         ),
@@ -95,7 +95,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
             )}
           </DialogC>
           <InputC
-            startItem={<Search className='ml-2 scale-[0.8]' />}
+            startItem={<Search className='ml-2 size-4' />}
             onChange={(e) => setKeySearch(e.target.value)}
           />
         </div>

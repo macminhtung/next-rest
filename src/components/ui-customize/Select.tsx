@@ -57,7 +57,7 @@ export const SelectC = (props: TSelectProps) => {
         >
           {options.find((o) => o.value === oValue)?.label || placeholder}
           {loading ? (
-            <Loader2 className='absolute right-[12px] animate-spin text-primary scale-[1.2]' />
+            <Loader2 className='absolute right-[12px] animate-spin text-primary size-4' />
           ) : (
             <ChevronDown className='ml-auto opacity-50' />
           )}

@@ -27,7 +27,7 @@ export const UploadImageC = (props: TUploadImageC) => {
       {/* # ================= # */}
       {isUploading && (
         <div className='absolute top-0 z-[1] flex flex-col size-full items-center justify-center opacity-80 gap-6 bg-background'>
-          <LoaderCircle className='text-primary scale-[2] animate-spin' />
+          <LoaderCircle className='text-primary size-14 animate-spin' />
           <p className='text-primary font-bold animate-bounce'>Uploading</p>
         </div>
       )}
@@ -85,7 +85,7 @@ export const UploadImageC = (props: TUploadImageC) => {
                 {...getRootProps()}
               >
                 <input {...getInputProps()} />
-                <ImageIcon className='h-16 w-16 scale-[2] text-primary' strokeWidth={1.5} />
+                <ImageIcon className='size-30 text-primary' strokeWidth={1.5} />
               </div>
             )}
           </Dropzone>

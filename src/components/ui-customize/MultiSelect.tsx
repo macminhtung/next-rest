@@ -96,7 +96,7 @@ export const MultiSelectC = (props: TMultiSelectCProps) => {
                       {option?.label}
                       <div className='ml-2 h-4 w-4 cursor-pointer'>
                         <XCircle
-                          className='scale-[1.2]'
+                          className='size-4'
                           onClick={(event) => {
                             event.stopPropagation();
                             toggleOptionValue(value);
@@ -115,18 +115,18 @@ export const MultiSelectC = (props: TMultiSelectCProps) => {
 
               <div className='flex items-center justify-between [&_svg]:text-primary'>
                 {loading ? (
-                  <Loader2 className='animate-spin text-primary scale-[1.2] mx-2' />
+                  <Loader2 className='animate-spin text-primary size-4 mx-2' />
                 ) : (
                   <>
                     <XIcon
-                      className='h-4 mx-2 cursor-pointer text-primary scale-[1.2]'
+                      className='h-4 mx-2 cursor-pointer text-primary size-4'
                       onClick={(event) => {
                         event.stopPropagation();
                         handleClearAll();
                       }}
                     />
                     <Separator orientation='vertical' className='flex min-h-6 h-full' />
-                    <ChevronDown className='h-4 mx-2 cursor-pointer text-primary scale-[1.2]' />
+                    <ChevronDown className='h-4 mx-2 cursor-pointer text-primary size-4' />
                   </>
                 )}
               </div>
@@ -135,9 +135,9 @@ export const MultiSelectC = (props: TMultiSelectCProps) => {
             <div className='flex items-center justify-between w-full mx-auto'>
               <span className='text-md text-primary'>{placeholder}</span>
               {loading ? (
-                <Loader2 className='animate-spin text-primary scale-[1.2]' />
+                <Loader2 className='animate-spin text-primary size-4' />
               ) : (
-                <ChevronDown className='h-4 cursor-pointer text-primary mx-2 scale-[1.2]' />
+                <ChevronDown className='h-4 cursor-pointer text-primary mx-2 size-4' />
               )}
             </div>
           )}
@@ -145,9 +145,7 @@ export const MultiSelectC = (props: TMultiSelectCProps) => {
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0' align='start'>
         <Command className='min-w-52' onChange={onSearch}>
-          {onSearch && (
-            <CommandInput className='min-h-10 [&_svg]:scale-[1.2]' placeholder='Search...' />
-          )}
+          {onSearch && <CommandInput className='min-h-10 [&_svg]:size-4' placeholder='Search...' />}
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup className='[&>div]:grid [&>div]:gap-1'>

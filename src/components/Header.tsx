@@ -111,24 +111,20 @@ const Header = () => {
             <DropdownMenu open={isOpenMenu} onOpenChange={setIsOpenMenu}>
               <DropdownMenuTrigger asChild>
                 <ButtonC variant='outline'>
-                  {isOpenMenu ? (
-                    <ListX className='scale-[1.5]' />
-                  ) : (
-                    <Menu className='scale-[1.5]' />
-                  )}
+                  {isOpenMenu ? <ListX className='size-5' /> : <Menu className='size-5' />}
                 </ButtonC>
               </DropdownMenuTrigger>
               <DropdownMenuContent className='min-w-fit w-32 p-1.5 absolute right-[-22px] top-[4px]'>
                 <DropdownMenuLabel>{themeAndLang}</DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => router.push(`/${curLocale}/dashboard/profile`)}>
-                  <UserPen className='scale-[1.3] mr-2 text-primary' />
+                  <UserPen className='size-5 mr-2 text-primary' />
                   <span>{t('profile')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => signOutMutation.mutate(undefined)}
                   disabled={signOutMutation.isPending}
                 >
-                  <LogOut className='scale-[1.2] mr-2 text-primary' />
+                  <LogOut className='size-5 mr-2 text-primary' />
                   <span>{t('signOut')}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
