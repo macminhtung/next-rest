@@ -44,7 +44,9 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
       {
         key: 'image',
         title: 'Image',
-        render: (record) => <AvatarC src={record.image} className='rounded-none size-[50px]' />,
+        render: (record) => (
+          <AvatarC src={record.image || '/product.png'} className='rounded-md size-[50px] p-1' />
+        ),
       },
       { key: 'name', title: 'Name' },
       { key: 'description', title: 'Description' },
