@@ -55,7 +55,12 @@ const ProductForm = (props: TProductForm) => {
 
   return (
     <Form onSubmit={onSubmit} className='grid gap-6 w-full'>
-      <ItemField iType={EItemFieldType.UPLOAD_IMAGE} label={'Image'} fieldName='image' />
+      <ItemField
+        iType={EItemFieldType.UPLOAD_IMAGE}
+        label={''}
+        fieldName='image'
+        className='items-center'
+      />
       <ItemField iType={EItemFieldType.INPUT} label={'Name'} fieldName='name' />
       <ItemField iType={EItemFieldType.TEXTAREA} label={'Description'} fieldName='description' />
       <ButtonC

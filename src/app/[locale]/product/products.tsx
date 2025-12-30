@@ -2,17 +2,19 @@
 
 import { useState, useMemo } from 'react';
 import { useAppStore } from '@/store';
+import { useTranslations } from 'next-intl';
 import { useDebounce, useScreen } from '@/common/hooks';
 import { Pencil, X, Plus, Search } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { TableC, AvatarC, ButtonC, DialogC, InputC, AlertDialogC } from '@/components/ui-customize';
 import {
   TProduct,
   useGetPaginatedProductsQuery,
   useDeleteProductMutation,
 } from '@/react-query/product';
-import { TableC, AvatarC, ButtonC, DialogC, InputC, type THeader } from '@/components/ui-customize';
 import ProductForm from '@/app/[locale]/product/form';
 import type { TRequestConfig, TGetPaginatedRecords } from '@/react-query/types';
+import type { THeader } from '@/components/ui-customize';
 
 const initFormValues: TProduct = {
   id: '',
@@ -23,6 +25,7 @@ const initFormValues: TProduct = {
 
 export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecords> }) => {
   const { queryConfig } = props;
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const [formValues, setFormValues] = useState<TProduct | null>(null);
   const [keySearch, setKeySearch] = useState<string>('');
@@ -31,13 +34,17 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
   const authUser = useAppStore((state) => state.authUser);
   const isAdmin = useMemo(() => authUser.roleId === 1, [authUser.roleId]);
   const { md } = useScreen();
+  const [deleteId, setDeleteId] = useState<string>('');
 
   const { data, isLoading } = useGetPaginatedProductsQuery({
     params: { ...params, keySearch: debounceKeySearch },
   });
 
   const deleteProductMutation = useDeleteProductMutation({
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['GetPaginatedProducts'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['GetPaginatedProducts'] });
+      setDeleteId('');
+    },
   });
 
   const headers = useMemo(() => {
@@ -56,7 +63,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
       { key: 'description', title: 'Description' },
     ];
 
-    if (isAdmin)
+    if (isAdmin) {
       initHeaders.push({
         key: 'id',
         title: '',
@@ -69,16 +76,17 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
             <ButtonC
               variant={'outline'}
               className='text-red-500'
-              onClick={() => deleteProductMutation.mutate(record.id)}
+              onClick={() => setDeleteId(record.id)}
             >
               <X className='size-4' />
             </ButtonC>
           </div>
         ),
       });
+    }
 
     return initHeaders;
-  }, [isAdmin, deleteProductMutation]);
+  }, [isAdmin, setDeleteId]);
 
   const { records = [], page, total, take } = data! || {};
 
@@ -88,7 +96,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         <div className='flex gap-5'>
           <ButtonC className='mb-5 w-fit' onClick={() => setFormValues(initFormValues)}>
             <Plus />
-            <p className='max-sm:hidden '>Create product</p>
+            <p className='max-sm:hidden '>{t('createProduct')}</p>
           </ButtonC>
           <InputC
             className='w-full'
@@ -125,17 +133,39 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
                 className='rounded-none size-20 border-0'
               />
               <div className='flex gap-3'>
-                <p>Name:</p>
+                <p>{t('name')}:</p>
                 <p>{record.name}</p>
               </div>
               <div className='flex gap-3'>
-                <p>Description:</p>
+                <p>{t('description')}:</p>
                 <p>{record.description}</p>
               </div>
+              {isAdmin && (
+                <div className='flex gap-3 mt-auto'>
+                  <ButtonC variant='outline' onClick={() => setFormValues(record)}>
+                    <Pencil className='size-4' />
+                  </ButtonC>
+                  <ButtonC
+                    variant='outline'
+                    className='text-red-500'
+                    onClick={() => setDeleteId(record.id)}
+                  >
+                    <X className='size-4' />
+                  </ButtonC>
+                </div>
+              )}
             </div>
           ))}
         </div>
       )}
+
+      <AlertDialogC
+        isOpen={!!deleteId}
+        title={t('Are you absolutely sure about deleting this product?')}
+        cancelAction={() => setDeleteId('')}
+        continueAction={() => deleteProductMutation.mutateAsync(deleteId)}
+        isLoading={deleteProductMutation.isPending}
+      />
     </div>
   );
 };

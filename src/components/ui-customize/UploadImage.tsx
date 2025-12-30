@@ -26,7 +26,7 @@ export const UploadImageC = (props: TUploadImageC) => {
       {/* # ==> UPLOADING <== # */}
       {/* # ================= # */}
       {isUploading && (
-        <div className='absolute top-0 z-[1] flex flex-col size-full items-center justify-center opacity-80 gap-6 bg-background'>
+        <div className='absolute top-0 z-1 flex flex-col size-full items-center justify-center opacity-80 gap-6 bg-background'>
           <LoaderCircle className='text-primary size-14 animate-spin' />
           <p className='text-primary font-bold animate-bounce'>Uploading</p>
         </div>
@@ -39,7 +39,7 @@ export const UploadImageC = (props: TUploadImageC) => {
           // # ================== #
           <div className='relative aspect-square'>
             <Button
-              className='absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 h-fit !p-1 cursor-pointer rounded-[50%] z-10'
+              className='absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 h-fit p-1! cursor-pointer rounded-[50%] z-10'
               onClick={() => {
                 setProfilePicture('');
                 if (onChange) onChange('');
@@ -85,7 +85,7 @@ export const UploadImageC = (props: TUploadImageC) => {
                 {...getRootProps()}
               >
                 <input {...getInputProps()} />
-                <ImageIcon className='size-30 text-primary' strokeWidth={1.5} />
+                <ImageIcon className='size-30 md:size-40 text-primary' strokeWidth={1.5} />
               </div>
             )}
           </Dropzone>
