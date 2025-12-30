@@ -24,11 +24,9 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
   if (!mounted || isAppLoading) return <AppLoading />;
 
   return (
-    <div className='max-w-[1800px] w-full h-full flex flex-col'>
+    <div className='max-w-450 w-screen h-screen flex flex-col'>
       <Header />
-      <div className='flex p-3 h-[calc(100vh-66px)] overflow-auto'>
-        <div className='p-3 flex flex-1 justify-center h-fit'>{children}</div>
-      </div>
+      <div className='p-4 flex flex-1 flex-col overflow-hidden'>{children}</div>
     </div>
   );
 };

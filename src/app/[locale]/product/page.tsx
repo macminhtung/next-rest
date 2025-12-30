@@ -9,7 +9,7 @@ const ProductPage = async () => {
   const t = await getTranslations();
 
   const queryClient = new QueryClient();
-  const queryConfig: TRequestConfig<TGetPaginatedRecords> = { params: { page: 1, take: 5 } };
+  const queryConfig: TRequestConfig<TGetPaginatedRecords> = { params: { page: 1, take: 10 } };
   await queryClient.prefetchQuery({
     queryKey: ['GetPaginatedProducts', queryConfig],
     queryFn: () =>
@@ -20,7 +20,7 @@ const ProductPage = async () => {
   });
 
   return (
-    <div className='flex flex-col h-full w-full md:items-center justify-center'>
+    <div className='flex flex-col md:items-center size-full'>
       <p className='text-3xl md:text-5xl font-semibold my-4 md:my-10'>{t('product')}</p>
       <Hydration state={dehydrate(queryClient, { shouldDehydrateQuery: () => true })}>
         <Products queryConfig={queryConfig} />

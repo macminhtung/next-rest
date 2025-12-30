@@ -15,7 +15,7 @@ const ProfilePage = () => {
         name: t('profile'),
         content: (
           <>
-            <p className='text-4xl font-bold my-10'>{t('profile')}</p>
+            <p className='text-3xl my-5 md:text-5xl md:my-10 font-bold'>{t('profile')}</p>
             <ProfileForm />
           </>
         ),
@@ -25,7 +25,7 @@ const ProfilePage = () => {
         name: t('password'),
         content: (
           <>
-            <p className='text-4xl font-bold my-10'>{t('password')}</p>
+            <p className='text-3xl my-5 md:text-5xl md:my-10 font-bold'>{t('password')}</p>
             <PasswordForm />
           </>
         ),
@@ -38,14 +38,14 @@ const ProfilePage = () => {
     <div className='size-full flex flex-col items-center gap-6'>
       <Tabs
         defaultValue={tabs[0].name}
-        className='w-full flex flex-row items-start gap-4 justify-center max-md:flex-col max-md:items-center'
+        className='w-full flex flex-col items-center gap-4 justify-center md:flex-row md:items-start'
       >
         <TabsList className='shrink-0 grid grid-cols-1 p-0 max-md:grid-cols-2 bg-background'>
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.name}
               value={tab.name}
-              className='border-l-[5px] border-transparent rounded-md justify-start data-[state=active]:shadow-none data-[state=active]:border-primary data-[state=active]:bg-primary/5 py-1.5 max-md:border-l-1 max-md:border-b-[3px]'
+              className='border-l-[5px] border-transparent rounded-md justify-start data-[state=active]:shadow-none data-[state=active]:border-primary data-[state=active]:bg-primary/5 py-1.5 max-md:border-l max-md:border-b-[3px]'
             >
               <tab.icon className='h-5 w-5 me-2' /> {tab.name}
             </TabsTrigger>

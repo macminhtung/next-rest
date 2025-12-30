@@ -79,7 +79,7 @@ export const TableC = <
   );
 
   return (
-    <div className={cn('grid w-full [&>div]:border [&>div]:rounded relative', className)}>
+    <div className={cn('flex flex-col size-full overflow-hidden relative', className)}>
       {loading && (
         <div className='absolute z-10 bg-background opacity-70 size-full flex items-center justify-center'>
           <Loader2 className={cn('animate-spin text-primary')} size={40} />

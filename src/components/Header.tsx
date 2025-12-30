@@ -79,7 +79,7 @@ const Header = () => {
         />
 
         <SelectC
-          className='min-w-18 min-h-8 !h-6'
+          className='min-w-18 min-h-8 h-6!'
           popoverClassName='min-w-18 max-w-fit'
           value={curLocale}
           options={languageOptions}
@@ -91,7 +91,7 @@ const Header = () => {
   );
 
   return (
-    <div className='flex items-center p-3 gap-2 border-b-[1px] border-b-gray-900 h-[66px] dark:border-b-gray-300'>
+    <div className='flex items-center py-3 px-4 gap-2 border-b border-b-gray-900 h-16.5 dark:border-b-gray-300'>
       <AvatarC
         src='/logo.jpg'
         className={'rounded-[0.2rem] cursor-pointer size-10'}
@@ -114,7 +114,7 @@ const Header = () => {
                   {isOpenMenu ? <ListX className='size-5' /> : <Menu className='size-5' />}
                 </ButtonC>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='min-w-fit w-32 p-1.5 absolute right-[-22px] top-[4px]'>
+              <DropdownMenuContent className='min-w-fit w-32 p-1.5 absolute -right-5.5 top-1'>
                 <DropdownMenuLabel>{themeAndLang}</DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => router.push(`/${curLocale}/dashboard/profile`)}>
                   <UserPen className='size-5 mr-2 text-primary' />
@@ -138,7 +138,7 @@ const Header = () => {
             <ButtonC className='h-8' onClick={() => router.push(`/${curLocale}/signin`)}>
               <LogIn /> {t('signIn')}
             </ButtonC>
-            <div className='w-[2px] h-[25px] bg-gray-900 dark:bg-gray-300' />
+            <div className='w-0.5 h-6.25 bg-gray-900 dark:bg-gray-300' />
             {themeAndLang}
           </>
         )}

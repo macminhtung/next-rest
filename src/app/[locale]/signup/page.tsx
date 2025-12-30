@@ -6,7 +6,7 @@ const SignUpPage = () => {
 
   return (
     <div className='size-full flex flex-col items-center gap-6'>
-      <p className='text-4xl font-bold mb-10'>{t('signUp')}</p>
+      <p className='text-3xl md:text-5xl font-bold my-5 md:my-10'>{t('signUp')}</p>
       <SignUpForm />
     </div>
   );

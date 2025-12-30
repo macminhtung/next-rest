@@ -91,17 +91,18 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
   const { records = [], page, total, take } = data! || {};
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex flex-col flex-1 w-full overflow-hidden'>
       {isAdmin && (
-        <div className='flex gap-5'>
+        <div className='flex gap-5 py-1'>
           <ButtonC className='mb-5 w-fit' onClick={() => setFormValues(initFormValues)}>
             <Plus />
             <p className='max-sm:hidden '>{t('createProduct')}</p>
           </ButtonC>
           <InputC
-            className='w-full'
+            className='w-full md:max-w-100 mr-1'
             startItem={<Search className='ml-2 size-4' />}
             onChange={(e) => setKeySearch(e.target.value)}
+            placeholder='Search products'
           />
           <DialogC
             open={!!formValues}
@@ -119,15 +120,17 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         <TableC
           loading={isLoading}
           headers={headers}
-          className='[&>div]:max-h-75'
-          rowKey='name'
+          rowKey='id'
           rowRecords={records}
           pagination={{ page, total, take, setPagination: setParams }}
         />
       ) : (
         <div className='grid grid-cols-1 gap-8 mt-5 sm:grid-cols-2'>
           {records.map((record) => (
-            <div key={record.id} className='flex flex-col gap-3 items-center border p-5 rounded-md'>
+            <div
+              key={record.id}
+              className='flex flex-col gap-3 items-center bg-neutral-200 shadow-md p-5 rounded-md'
+            >
               <AvatarC
                 src={record.image || '/product.png'}
                 className='rounded-none size-20 border-0'
