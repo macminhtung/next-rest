@@ -13,6 +13,8 @@ import {
   useDeleteProductMutation,
 } from '@/react-query/product';
 import ProductForm from '@/app/[locale]/product/form';
+import { PaginationC } from '@/components/ui-customize';
+
 import type { TRequestConfig, TGetPaginatedRecords } from '@/react-query/types';
 import type { THeader } from '@/components/ui-customize';
 
@@ -116,7 +118,11 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
           </DialogC>
         </div>
       )}
+
       {md ? (
+        // #=================#
+        // # ==> DESKTOP <== #
+        // #=================#
         <TableC
           loading={isLoading}
           headers={headers}
@@ -125,40 +131,44 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
           pagination={{ page, total, take, setPagination: setParams }}
         />
       ) : (
-        <div className='grid grid-cols-1 gap-8 mt-5 sm:grid-cols-2'>
-          {records.map((record) => (
-            <div
-              key={record.id}
-              className='flex flex-col gap-3 items-center bg-neutral-200 shadow-md p-5 rounded-md'
-            >
-              <AvatarC
-                src={record.image || '/product.png'}
-                className='rounded-none size-20 border-0'
-              />
-              <div className='flex gap-3'>
-                <p>{t('name')}:</p>
-                <p>{record.name}</p>
-              </div>
-              <div className='flex gap-3'>
-                <p>{t('description')}:</p>
-                <p>{record.description}</p>
-              </div>
-              {isAdmin && (
-                <div className='flex gap-3 mt-auto'>
-                  <ButtonC variant='outline' onClick={() => setFormValues(record)}>
-                    <Pencil className='size-4' />
-                  </ButtonC>
-                  <ButtonC
-                    variant='outline'
-                    className='text-red-500'
-                    onClick={() => setDeleteId(record.id)}
-                  >
-                    <X className='size-4' />
-                  </ButtonC>
+        // #================#
+        // # ==> MOBILE <== #
+        // #================#
+        <div className='flex flex-col flex-1 overflow-hidden'>
+          <div className='grid grid-cols-1 flex-1 overflow-auto gap-8 mt-5 sm:grid-cols-2'>
+            {records.map((record) => (
+              <div
+                key={record.id}
+                className='flex flex-col gap-3 items-center bg-neutral-200 dark:bg-neutral-900 shadow-md p-5 rounded-md'
+              >
+                <AvatarC
+                  src={record.image || '/product.png'}
+                  className='rounded-none size-20 border-0'
+                />
+                <div className='flex gap-3'>
+                  <p className='font-semibold'>{record.name}</p>
                 </div>
-              )}
-            </div>
-          ))}
+                <div className='flex gap-3'>
+                  <p>{record.description}</p>
+                </div>
+                {isAdmin && (
+                  <div className='flex gap-3'>
+                    <ButtonC variant='outline' onClick={() => setFormValues(record)}>
+                      <Pencil className='size-4' />
+                    </ButtonC>
+                    <ButtonC
+                      variant='outline'
+                      className='text-red-500'
+                      onClick={() => setDeleteId(record.id)}
+                    >
+                      <X className='size-4' />
+                    </ButtonC>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <PaginationC page={page} total={total} take={take} setPagination={setParams} />
         </div>
       )}
 

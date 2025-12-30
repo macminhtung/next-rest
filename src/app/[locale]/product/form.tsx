@@ -15,8 +15,8 @@ import {
 
 const formSchema = z.object({
   image: z.string(),
-  name: z.string(),
-  description: z.string(),
+  name: z.string().min(5),
+  description: z.string().min(10),
 });
 
 type TProductForm = { formValues: TProduct; closeDialog: () => void };
