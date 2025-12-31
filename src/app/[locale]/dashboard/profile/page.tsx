@@ -15,7 +15,7 @@ const ProfilePage = () => {
         name: t('profile'),
         content: (
           <>
-            <p className='text-3xl my-5 md:text-5xl md:my-10 font-bold'>{t('profile')}</p>
+            <p className='text-3xl my-5 md:text-4xl font-bold text-shadow-neon'>{t('profile')}</p>
             <ProfileForm />
           </>
         ),
@@ -25,7 +25,7 @@ const ProfilePage = () => {
         name: t('password'),
         content: (
           <>
-            <p className='text-3xl my-5 md:text-5xl md:my-10 font-bold'>{t('password')}</p>
+            <p className='text-3xl my-5 md:text-4xl font-bold text-shadow-neon'>{t('password')}</p>
             <PasswordForm />
           </>
         ),

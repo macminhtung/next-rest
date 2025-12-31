@@ -110,7 +110,7 @@ const Header = () => {
             />
             <DropdownMenu open={isOpenMenu} onOpenChange={setIsOpenMenu}>
               <DropdownMenuTrigger asChild>
-                <ButtonC variant='outline'>
+                <ButtonC variant='outline' className='w-10 h-10'>
                   {isOpenMenu ? <ListX className='size-5' /> : <Menu className='size-5' />}
                 </ButtonC>
               </DropdownMenuTrigger>

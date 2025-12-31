@@ -26,4 +26,5 @@ export const vnTranslation = {
   updatedSuccessfully: 'Đã cập nhật thành công',
   deletedSuccessfully: 'Đã xóa thành công',
   createProduct: 'Tạo sản phẩm',
+  updateProduct: 'Sửa Product',
 };

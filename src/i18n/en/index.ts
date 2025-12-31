@@ -26,4 +26,5 @@ export const enTranslation = {
   updatedSuccessfully: 'Updated successfully',
   deletedSuccessfully: 'Deleted successfully',
   createProduct: 'Create Product',
+  updateProduct: 'Update Product',
 };

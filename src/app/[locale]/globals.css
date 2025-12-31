@@ -135,6 +135,7 @@ body {
 
 @theme {
   --animate-spin-2s: spin 2s linear infinite;
+  --text-shadow-neon:  0 0 2px #bbbbbb, 0 0 4px #bbbbbb, 0 0 8px #bbbbbb;
 
   --breakpoint-xs: 30rem;   /* ~480px */
   --breakpoint-sm: 40rem;   /* 640px */

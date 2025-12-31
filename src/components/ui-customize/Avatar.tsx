@@ -10,7 +10,7 @@ type TAvatarProps = ComponentProps<
 export function AvatarC(props: TAvatarProps) {
   const { className, fallbackElm, ...rest } = props;
   return (
-    <Avatar className={cn('border-2 border-border', className)}>
+    <Avatar className={cn('border border-border', className)}>
       <AvatarImage {...rest} />
       {fallbackElm && <AvatarFallback>{fallbackElm}</AvatarFallback>}
     </Avatar>
