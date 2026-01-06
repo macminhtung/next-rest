@@ -27,4 +27,7 @@ export const enTranslation = {
   deletedSuccessfully: 'Deleted successfully',
   createProduct: 'Create Product',
   updateProduct: 'Update Product',
+  cart: 'Cart',
+  quantity: 'Quantity',
+  price: 'Price',
 };

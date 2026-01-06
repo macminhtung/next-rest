@@ -13,6 +13,8 @@ export type TAuthUser = {
   roleId: number;
 };
 
+type TCartInfo = { [name: string]: { quantity: number; price: number } };
+
 export const initAuthUser: TAuthUser = {
   id: '',
   avatar: '',
@@ -31,6 +33,8 @@ type TAppState = {
   setAccessToken: (token: string) => void;
   authUser: TAuthUser;
   setAuthUser: (authUser: TAuthUser) => void;
+  cartInfo: TCartInfo;
+  setCartInfo: (cartInfo: TCartInfo) => void;
 };
 
 export const useAppStore = create<TAppState>((set) => ({
@@ -47,4 +51,6 @@ export const useAppStore = create<TAppState>((set) => ({
   setAccessToken: (tokens) => set({ accessToken: tokens }),
   authUser: initAuthUser,
   setAuthUser: (authUser) => set({ authUser }),
+  cartInfo: {},
+  setCartInfo: (cartInfo) => set({ cartInfo }),
 }));

@@ -6,10 +6,20 @@ import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { ELanguage } from '@/common/enums';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
-import { MoonIcon, SunMediumIcon, Menu, LogIn, LogOut, ListX, UserPen } from 'lucide-react';
+import {
+  MoonIcon,
+  SunMediumIcon,
+  Menu,
+  LogIn,
+  LogOut,
+  ListX,
+  UserPen,
+  ShoppingCart,
+  X,
+} from 'lucide-react';
 import { ETheme } from '@/common/enums';
 import { useAppStore, initAuthUser } from '@/store';
-import { AvatarC, ButtonC, SelectC, SwitchC } from '@/components/ui-customize';
+import { AvatarC, ButtonC, SelectC, SwitchC, DialogC } from '@/components/ui-customize';
 import { usePathname, useRouter as useRouterI18n } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -42,6 +52,19 @@ const Header = () => {
 
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const isDarkMode = useMemo(() => theme === ETheme.DARK, [theme]);
+
+  const cartInfo = useAppStore((state) => state.cartInfo);
+  const setCartInfo = useAppStore((state) => state.setCartInfo);
+  const cartQuantity = useMemo(() => Object.keys(cartInfo).length, [cartInfo]);
+  const [isOpenCartDialog, setIsOpenCartDialog] = useState(false);
+
+  const removeCartItem = useCallback(
+    (name: string) => {
+      delete cartInfo[name];
+      setCartInfo({ ...cartInfo });
+    },
+    [setCartInfo, cartInfo]
+  );
 
   // Remove accessToken
   const removeAccessToken = useCallback(() => {
@@ -98,6 +121,38 @@ const Header = () => {
         onClick={() => router.push(`/${curLocale}`)}
       />
       <div className='flex items-center justify-center gap-4 ml-auto'>
+        <ButtonC onClick={() => setIsOpenCartDialog(true)}>
+          <ShoppingCart />
+          {!!cartQuantity && <p className='text-red-400'>{cartQuantity}</p>}
+        </ButtonC>
+
+        <DialogC
+          open={isOpenCartDialog}
+          onOpenChange={() => setIsOpenCartDialog(false)}
+          title={'Cart Information'}
+          showFooter={false}
+        >
+          <div className='grid grid-cols-3 gap-5 '>
+            {Object.keys(cartInfo).map((key) => (
+              <div key={key} className='flex flex-col border rounded-md p-3'>
+                <p>
+                  {t('name')}: {key}
+                </p>
+                <p>
+                  {t('price')}: {cartInfo[key].price}
+                </p>
+                <p>
+                  {t('quantity')}: {cartInfo[key].quantity}
+                </p>
+                <ButtonC onClick={() => removeCartItem(key)}>
+                  <X className='text-red-500' />
+                  Remove
+                </ButtonC>
+              </div>
+            ))}
+          </div>
+        </DialogC>
+
         {accessToken ? (
           // # ============== #
           // # ==> LOGGED <== #
