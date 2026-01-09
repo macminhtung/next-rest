@@ -23,6 +23,7 @@ const initFormValues: TProduct = {
   image: '',
   name: '',
   description: '',
+  unitPrice: 0,
 };
 
 export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecords> }) => {
@@ -60,9 +61,11 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
             className='rounded-none size-14 p-1 border-0'
           />
         ),
+        width: '10%',
       },
-      { key: 'name', title: 'Name' },
-      { key: 'description', title: 'Description' },
+      { key: 'name', title: 'Name', width: '12%' },
+      { key: 'description', title: 'Description', width: 'auto' },
+      { key: 'unitPrice', title: 'UnitPrice', width: '12%' },
     ];
 
     if (isAdmin) {
@@ -100,7 +103,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         {/* #=======================================# */}
         {isAdmin && (
           <>
-            <ButtonC className=' w-fit' onClick={() => setFormValues(initFormValues)}>
+            <ButtonC className='w-fit' onClick={() => setFormValues(initFormValues)}>
               <Plus />
               <p className='max-sm:hidden '>{t('createProduct')}</p>
             </ButtonC>
@@ -119,7 +122,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         )}
 
         <InputC
-          className='w-full md:max-w-100 mx-1'
+          className='w-full md:max-w-100 ring-0'
           startItem={<Search className='ml-4 size-4' />}
           onChange={(e) => setKeySearch(e.target.value)}
           placeholder='Search products'
@@ -136,6 +139,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
           rowKey='id'
           rowRecords={records}
           pagination={{ page, total, take, setPagination: setParams }}
+          className='min-w-250 table-fixed'
         />
       ) : (
         // #================#

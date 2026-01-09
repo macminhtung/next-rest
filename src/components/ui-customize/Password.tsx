@@ -17,7 +17,9 @@ export const PasswordC = (props: TPasswordCProps) => {
       className={className}
       {...rest}
       endItem={
-        <div onClick={() => setShow(!show)}>{show ? <EyeOpenIcon /> : <EyeCloseIcon />}</div>
+        <div className='cursor-pointer' onClick={() => setShow(!show)}>
+          {show ? <EyeOpenIcon /> : <EyeCloseIcon />}
+        </div>
       }
     />
   );

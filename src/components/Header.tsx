@@ -97,7 +97,7 @@ const Header = () => {
           }
           checked={isDarkMode}
           onCheckedChange={(checked) => setTheme(checked ? ETheme.DARK : ETheme.LIGHT)}
-          className='h-6 w-[2.65rem]'
+          className='h-6 w-[2.65rem] cursor-pointer'
           thumbClassName='h-5 w-5 data-[state=checked]:translate-x-5'
         />
 
@@ -121,8 +121,12 @@ const Header = () => {
         onClick={() => router.push(`/${curLocale}`)}
       />
       <div className='flex items-center justify-center gap-4 ml-auto'>
-        <ButtonC onClick={() => setIsOpenCartDialog(true)}>
-          <ShoppingCart />
+        <ButtonC
+          className='h-8 rounded-md'
+          onClick={() => setIsOpenCartDialog(true)}
+          variant={'secondary'}
+        >
+          <ShoppingCart className='size-5' />
           {!!cartQuantity && <p className='text-red-400'>{cartQuantity}</p>}
         </ButtonC>
 

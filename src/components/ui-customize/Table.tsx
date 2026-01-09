@@ -79,20 +79,22 @@ export const TableC = <
   );
 
   return (
-    <div className={cn('flex flex-col size-full overflow-hidden relative', className)}>
+    <div className='flex flex-col size-full overflow-hidden relative'>
       {loading && (
         <div className='absolute z-10 bg-background opacity-70 size-full flex items-center justify-center'>
           <Loader2 className={cn('animate-spin text-primary')} size={40} />
         </div>
       )}
-      <Table>
+      <Table className={className}>
         <TableHeader className='h-12'>
           <TableRow className='*:whitespace-nowrap sticky top-0 bg-background! shadow z-10'>
             {headers.map((item, idx) => (
               <TableHead
                 key={`${idx}-${String(item.key)}`}
                 className={cn(!idx && 'pl-4')}
-                style={{ width: item.width || 'auto' }}
+                style={{
+                  width: item.width || 'auto',
+                }}
               >
                 {selectMode && item.key === rowKey && (
                   <Checkbox

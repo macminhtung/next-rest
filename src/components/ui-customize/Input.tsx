@@ -18,14 +18,12 @@ export const InputC = (props: TInputCProps) => {
       <Input
         className={`${startItem && 'pl-10'} ${endItem && 'pr-10'} ${className} min-h-10`}
         {...rest}
-        onInput={(e) => {
-          if (rest.type === 'number' && rest.min !== undefined) {
-            const input = e.currentTarget;
-            input.value = Math.max(+rest.min, Number(input.value)).toString();
-          }
-        }}
       />
-      {endItem && <div className='absolute top-3.25 right-3 cursor-pointer'>{endItem}</div>}
+      {endItem && (
+        <div className='absolute top-0 right-0 size-10 flex items-center justify-center'>
+          {endItem}
+        </div>
+      )}
     </div>
   );
 };

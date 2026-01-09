@@ -17,6 +17,7 @@ const formSchema = z.object({
   image: z.string(),
   name: z.string().min(5),
   description: z.string().min(10),
+  unitPrice: z.coerce.number().min(0).multipleOf(0.01),
 });
 
 type TProductForm = { formValues: TProduct; closeDialog: () => void };
@@ -57,12 +58,18 @@ const ProductForm = (props: TProductForm) => {
     <Form onSubmit={onSubmit} className='grid gap-6 w-full'>
       <ItemField
         iType={EItemFieldType.UPLOAD_IMAGE}
-        label={''}
+        label=''
         fieldName='image'
         className='items-center'
       />
       <ItemField iType={EItemFieldType.INPUT} label={'Name'} fieldName='name' />
       <ItemField iType={EItemFieldType.TEXTAREA} label={'Description'} fieldName='description' />
+      <ItemField
+        iType={EItemFieldType.INPUT}
+        label={'Unit Price'}
+        fieldName='unitPrice'
+        iProps={{ type: 'number', min: 0, max: 1000000, step: '0.01', endItem: '$' }}
+      />
       <ButtonC
         type='submit'
         loading={createProductMutation.isPending || updateProductMutation.isPending}
