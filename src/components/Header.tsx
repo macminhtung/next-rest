@@ -16,6 +16,7 @@ import {
   UserPen,
   ShoppingCart,
   X,
+  Leaf,
 } from 'lucide-react';
 import { ETheme } from '@/common/enums';
 import { useAppStore, initAuthUser } from '@/store';
@@ -58,6 +59,7 @@ const Header = () => {
   const cartQuantity = useMemo(() => Object.keys(cartInfo).length, [cartInfo]);
   const [isOpenCartDialog, setIsOpenCartDialog] = useState(false);
 
+  // Remove item in cart
   const removeCartItem = useCallback(
     (name: string) => {
       delete cartInfo[name];
@@ -66,7 +68,7 @@ const Header = () => {
     [setCartInfo, cartInfo]
   );
 
-  // Remove accessToken
+  // Remove access token
   const removeAccessToken = useCallback(() => {
     router.push(`/${curLocale}/signin`);
     setAccessToken('');
@@ -74,7 +76,7 @@ const Header = () => {
     manageAccessToken({ type: EManageTokenType.SET, accessToken: '' });
   }, [curLocale, router, setAccessToken, setAuthUser]);
 
-  // Handle signOut
+  // Sign out mutation
   const signOutMutation = useSignOutMutation({
     onSuccess: () => removeAccessToken(),
     onError: () => removeAccessToken(),
@@ -143,14 +145,14 @@ const Header = () => {
                   {t('name')}: {key}
                 </p>
                 <p>
-                  {t('price')}: {cartInfo[key].price}
+                  {t('unitPrice')}: {cartInfo[key].unitPrice}
                 </p>
                 <p>
                   {t('quantity')}: {cartInfo[key].quantity}
                 </p>
                 <ButtonC onClick={() => removeCartItem(key)}>
                   <X className='text-red-500' />
-                  Remove
+                  {t('remove')}
                 </ButtonC>
               </div>
             ))}
@@ -173,11 +175,17 @@ const Header = () => {
                   {isOpenMenu ? <ListX className='size-5' /> : <Menu className='size-5' />}
                 </ButtonC>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='min-w-fit w-32 p-1.5 absolute -right-5.5 top-1'>
+              <DropdownMenuContent className='w-fit p-1.5 absolute -right-5.5 top-1'>
                 <DropdownMenuLabel>{themeAndLang}</DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => router.push(`/${curLocale}/dashboard/profile`)}>
                   <UserPen className='size-5 mr-2 text-primary' />
                   <span>{t('profile')}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => router.push(`/${curLocale}/dashboard/product-management`)}
+                >
+                  <Leaf className='size-5 mr-2 text-primary' />
+                  <span className='w-fit'>{t('product')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => signOutMutation.mutate(undefined)}

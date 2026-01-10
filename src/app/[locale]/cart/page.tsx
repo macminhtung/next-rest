@@ -24,7 +24,7 @@ const CartPage = () => {
       if (quantity) {
         setCartInfo({
           ...cartInfo,
-          [item.name]: { price: item.unitPrice, quantity: +e.target.value },
+          [item.name]: { unitPrice: item.unitPrice, quantity: +e.target.value },
         });
       } else {
         delete cartInfo[item.name];

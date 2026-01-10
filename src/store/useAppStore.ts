@@ -4,6 +4,9 @@ import { create } from 'zustand';
 import { ELocalStorageKey, ETheme } from '@/common/enums';
 import { manageAccessToken, EManageTokenType } from '@/common/client-funcs';
 
+// #======================#
+// # ==> DEFINE TYPES <== #
+// #======================#
 export type TAuthUser = {
   id: string;
   avatar: string;
@@ -13,16 +16,7 @@ export type TAuthUser = {
   roleId: number;
 };
 
-type TCartInfo = { [name: string]: { quantity: number; price: number } };
-
-export const initAuthUser: TAuthUser = {
-  id: '',
-  avatar: '',
-  email: '',
-  firstName: '',
-  lastName: '',
-  roleId: 0,
-};
+export type TCartInfo = { [name: string]: { quantity: number; unitPrice: number } };
 
 type TAppState = {
   isAppLoading: boolean;
@@ -37,6 +31,21 @@ type TAppState = {
   setCartInfo: (cartInfo: TCartInfo) => void;
 };
 
+// #===========================#
+// # ==> INITIALIZE VALUES <== #
+// #===========================#
+export const initAuthUser: TAuthUser = {
+  id: '',
+  avatar: '',
+  email: '',
+  firstName: '',
+  lastName: '',
+  roleId: 0,
+};
+
+// #====================#
+// # ==> STORE HOOK <== #
+// #====================#
 export const useAppStore = create<TAppState>((set) => ({
   isAppLoading: false,
   setIsAppLoading: (isAppLoading) => set({ isAppLoading }),

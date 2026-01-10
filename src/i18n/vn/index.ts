@@ -2,7 +2,6 @@ export const vnTranslation = {
   signIn: 'Đăng nhập',
   signUp: 'Đăng ký',
   signOut: 'Đăng xuất',
-  product: 'Sản phẩm',
   submit: 'Nộp',
   email: 'Email',
   password: 'Mật khẩu',
@@ -11,6 +10,7 @@ export const vnTranslation = {
   newPassword: 'Mật khẩu mới',
   cancel: 'Hủy',
   continue: 'Tiếp tục',
+  remove: 'Xóa',
   "Don't have an account?": 'Bạn chưa có tài khoản?',
   'Already have an account?': 'Bạn đã có tài khoản?',
   'Are you absolutely sure about deleting this product?':
@@ -25,6 +25,11 @@ export const vnTranslation = {
   createdSuccessfully: 'Đã tạo thành công',
   updatedSuccessfully: 'Đã cập nhật thành công',
   deletedSuccessfully: 'Đã xóa thành công',
+  product: 'Sản phẩm',
+  productManagement: 'Quản lý sản phẩm',
   createProduct: 'Tạo sản phẩm',
-  updateProduct: 'Sửa Product',
+  updateProduct: 'Sửa sản phẩm',
+  cart: 'Giỏ hàng',
+  quantity: 'Số lượng',
+  unitPrice: 'Đơn giá',
 };

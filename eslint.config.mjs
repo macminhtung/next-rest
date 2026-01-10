@@ -1,30 +1,29 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import prettier from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
+import prettierPlugin from 'eslint-plugin-prettier';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
+export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  ...compat.extends('next/core-web-vitals', 'next/typescript', 'next', 'prettier'),
-  ...compat.plugins('eslint-plugin-prettier'),
-  ...compat.config({
-    rules: {
-      ...prettier.rules,
-      '@typescript-eslint/no-empty-object-type': 0,
-      'prettier/prettier': 'error',
-      '@typescript-eslint/no-unused-vars': 'warn',
-    },
-  }),
-];
 
-export default eslintConfig;
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    plugins: {
+      'react-hooks': reactHooks,
+      prettier: prettierPlugin,
+    },
+    rules: {
+      // React Hooks
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // Prettier
+      'prettier/prettier': 'error',
+
+      // TS
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-empty-object-type': 'off',
+    },
+  },
+];

@@ -12,9 +12,9 @@ import {
   Checkbox,
 } from '@/components/ui';
 import { type CheckedState } from '@radix-ui/react-checkbox';
-import { Loader2 } from 'lucide-react';
 import { PaginationC } from '@/components/ui-customize';
 import { cn } from '@/lib/utils';
+import { LoadingOverlay } from '@/components/LoadingOverlay';
 
 export type THeader<R> = {
   key: keyof R;
@@ -80,18 +80,14 @@ export const TableC = <
 
   return (
     <div className='flex flex-col size-full overflow-hidden relative'>
-      {loading && (
-        <div className='absolute z-10 bg-background opacity-70 size-full flex items-center justify-center'>
-          <Loader2 className={cn('animate-spin text-primary')} size={40} />
-        </div>
-      )}
+      {loading && <LoadingOverlay />}
       <Table className={className}>
         <TableHeader className='h-12'>
           <TableRow className='*:whitespace-nowrap sticky top-0 bg-background! shadow z-10'>
             {headers.map((item, idx) => (
               <TableHead
                 key={`${idx}-${String(item.key)}`}
-                className={cn(!idx && 'pl-4')}
+                className={cn(!idx && 'pl-4', 'text-neutral-700 dark:text-neutral-300')}
                 style={{
                   width: item.width || 'auto',
                 }}
@@ -112,7 +108,10 @@ export const TableC = <
           {rowRecords.map((record, idxR) => (
             <TableRow key={idxR} className='odd:bg-muted/50 *:whitespace-nowrap h-11'>
               {headers.map((header, idxH) => (
-                <TableCell key={String(header.key)} className={cn(!idxH && 'pl-4')}>
+                <TableCell
+                  key={String(header.key)}
+                  className={cn(!idxH && 'pl-4', 'dark:text-neutral-300')}
+                >
                   {selectMode && header.key === rowKey && (
                     <Checkbox
                       className='mr-2'

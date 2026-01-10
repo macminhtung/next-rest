@@ -12,14 +12,15 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const mounted = useMounted();
   const accessToken = useAppStore((state) => state.accessToken);
 
-  // Prevent access to the dashboard when not logged in
+  // Prevent access to the dashboard if not authenticated
   useEffect(() => {
     if (mounted && !accessToken) router.push(`/${curLocale}/signin`);
   }, [accessToken, mounted, curLocale, router]);
 
+  // Render nothing until mounted and accessToken is available
   if (!mounted || !accessToken) return null;
 
-  return <>{children}</>;
+  return children;
 };
 
 export default DashboardLayout;

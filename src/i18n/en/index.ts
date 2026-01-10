@@ -2,7 +2,7 @@ export const enTranslation = {
   signIn: 'SignIn',
   signUp: 'SignUp',
   signOut: 'SignOut',
-  product: 'Product',
+
   submit: 'Submit',
   email: 'Email',
   password: 'Password',
@@ -11,6 +11,7 @@ export const enTranslation = {
   newPassword: 'New password',
   cancel: 'Cancel',
   continue: 'Continue',
+  remove: 'Remove',
   "Don't have an account?": "Don't have an account?",
   'Already have an account?': 'Already have an account?',
   'Are you absolutely sure about deleting this product?':
@@ -25,9 +26,11 @@ export const enTranslation = {
   createdSuccessfully: 'Created successfully',
   updatedSuccessfully: 'Updated successfully',
   deletedSuccessfully: 'Deleted successfully',
+  product: 'Product',
+  productManagement: 'Product Management',
   createProduct: 'Create Product',
   updateProduct: 'Update Product',
   cart: 'Cart',
   quantity: 'Quantity',
-  price: 'Price',
+  unitPrice: 'Unit Price',
 };
