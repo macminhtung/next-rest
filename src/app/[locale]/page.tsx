@@ -4,12 +4,20 @@ import { Hydration } from '@/react-query/Hydration';
 import axios from 'axios';
 import type { TRequestConfig, TGetPaginatedRecords } from '@/react-query/types';
 import { Products } from '@/app/[locale]/products';
+import { DEFAULT_TAKE } from '@/common/constants';
 
-const LandingPage = async () => {
+type TSearchParams = Promise<{ page?: number; take?: number; keySearch?: string }>;
+
+const LandingPage = async ({ searchParams }: { searchParams: TSearchParams }) => {
   const t = await getTranslations();
+  const { page = 1, take = DEFAULT_TAKE, keySearch = '' } = await searchParams;
 
   const queryClient = new QueryClient();
-  const queryConfig: TRequestConfig<TGetPaginatedRecords> = { params: { page: 1, take: 10 } };
+
+  const queryConfig: TRequestConfig<TGetPaginatedRecords> = {
+    params: { page, take, keySearch },
+  };
+
   await queryClient.prefetchQuery({
     queryKey: ['GetPaginatedProducts', queryConfig],
     queryFn: () =>

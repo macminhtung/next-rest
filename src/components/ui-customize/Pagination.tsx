@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/pagination';
 import { SelectC } from '@/components/ui-customize';
 import { cn } from '@/lib/utils';
+import { DEFAULT_TAKE } from '@/common/constants';
 
 type TPaginationProps = {
   page?: number;
@@ -24,7 +25,7 @@ type TPaginationProps = {
 const NUM_RECORDS_PER_PAGE = [10, 20, 50, 100];
 
 export const PaginationC = (props: TPaginationProps) => {
-  const { page = 1, total = 1, take = 1, className, setPagination } = props;
+  const { page = 1, total = 1, take = DEFAULT_TAKE, className, setPagination } = props;
   const prevPages = useMemo(() => [page - 2, page - 1].filter((prevP) => prevP > 0), [page]);
   const pageQuantity = useMemo(() => Math.ceil(total / take), [take, total]);
   const nextPages = useMemo(
@@ -33,7 +34,7 @@ export const PaginationC = (props: TPaginationProps) => {
   );
 
   return (
-    <div className={cn('mt-4 h-11 flex !border-0 overflow-x-auto', className)}>
+    <div className={cn('mt-4 h-11 flex border-0! overflow-x-auto', className)}>
       <div className='flex w-full'>
         <Pagination className='flex w-fit mx-0 ml-auto'>
           <PaginationContent>
@@ -114,7 +115,8 @@ export const PaginationC = (props: TPaginationProps) => {
 
             {/* [NUMBER RECORDS / PAGE] SELECTOR */}
             <SelectC
-              className='w-30 ml-1 min-h-9 focus-visible:!ring-[0px]'
+              className='w-30 ml-1 min-h-9 focus-visible:ring-0!'
+              value={take.toString()}
               options={NUM_RECORDS_PER_PAGE.map((num) => ({
                 label: `${num} / page`,
                 value: num.toString(),

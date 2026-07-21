@@ -19,6 +19,7 @@ import { PaginationC } from '@/components/ui-customize';
 
 import type { TGetPaginatedRecords } from '@/react-query/types';
 import type { THeader } from '@/components/ui-customize';
+import { DEFAULT_TAKE } from '@/common/constants';
 
 const initFormValues: TProduct = {
   id: '',
@@ -36,7 +37,7 @@ const ProductManagementPage = () => {
   const [formValues, setFormValues] = useState<TProduct | null>(null);
   const [keySearch, setKeySearch] = useState<string>('');
   const debounceKeySearch = useDebounce(keySearch);
-  const [params, setParams] = useState<TGetPaginatedRecords>();
+  const [params, setParams] = useState<TGetPaginatedRecords>({ take: DEFAULT_TAKE });
   const authUser = useAppStore((state) => state.authUser);
   const { md } = useScreen();
   const [deleteId, setDeleteId] = useState<string>('');
@@ -48,10 +49,12 @@ const ProductManagementPage = () => {
   }, [curLocale, isAdmin, router]);
 
   // Fetch paginated products
-  const { data, isLoading } = useGetPaginatedProductsQuery({
-    params: { ...params, keySearch: debounceKeySearch },
-  });
+  const { data, isLoading } = useGetPaginatedProductsQuery({ params });
   const { records = [], page, total, take } = data! || {};
+
+  useEffect(() => {
+    setParams((prev) => ({ ...prev, keySearch: debounceKeySearch, page: 1 }));
+  }, [debounceKeySearch]);
 
   // Delete product mutation
   const deleteProductMutation = useDeleteProductMutation({

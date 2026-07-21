@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/common/hooks';
 import { Search } from 'lucide-react';
 import { AvatarC, InputC } from '@/components/ui-customize';
@@ -12,14 +13,33 @@ import type { TRequestConfig, TGetPaginatedRecords } from '@/react-query/types';
 
 export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecords> }) => {
   const { queryConfig } = props;
-  const [keySearch, setKeySearch] = useState<string>('');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [keySearch, setKeySearch] = useState<string>(queryConfig.params.keySearch || '');
   const debounceKeySearch = useDebounce(keySearch);
-  const [params, setParams] = useState<TGetPaginatedRecords>(queryConfig.params);
 
-  const { data, isLoading } = useGetPaginatedProductsQuery({
-    params: { ...params, keySearch: debounceKeySearch },
-  });
+  const updateUrl = useCallback(
+    (next: Partial<TGetPaginatedRecords>) => {
+      const sp = new URLSearchParams(searchParams.toString());
+      const merged = { ...queryConfig.params, ...next };
 
+      Object.entries(merged).forEach(([key, value]) => {
+        if (!value) sp.delete(key);
+        else sp.set(key, String(value));
+      });
+
+      router.push(`${pathname}?${sp.toString()}`);
+    },
+    [searchParams, pathname, router, queryConfig.params]
+  );
+
+  useEffect(() => {
+    if (debounceKeySearch !== queryConfig.params.keySearch)
+      updateUrl({ keySearch: debounceKeySearch, page: 1 });
+  }, [debounceKeySearch, queryConfig.params.keySearch, updateUrl]);
+
+  const { data, isLoading } = useGetPaginatedProductsQuery({ params: queryConfig.params });
   const { records = [], page, total, take } = data! || {};
 
   return (
@@ -29,6 +49,7 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         <InputC
           className='w-full md:max-w-100 ring-0!'
           startItem={<Search className='ml-3.5 size-4' />}
+          defaultValue={keySearch}
           onChange={(e) => setKeySearch(e.target.value)}
           placeholder='Search products'
         />
@@ -56,7 +77,12 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
             ))}
           </div>
         </div>
-        <PaginationC page={page} total={total} take={take} setPagination={setParams} />
+        <PaginationC
+          page={page}
+          total={total}
+          take={take}
+          setPagination={(params) => updateUrl(params)}
+        />
       </div>
     </div>
   );
