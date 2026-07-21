@@ -25,6 +25,7 @@ export const vnTranslation = {
   createdSuccessfully: 'Đã tạo thành công',
   updatedSuccessfully: 'Đã cập nhật thành công',
   deletedSuccessfully: 'Đã xóa thành công',
+  landingPage: 'Trang chủ',
   product: 'Sản phẩm',
   productManagement: 'Quản lý sản phẩm',
   createProduct: 'Tạo sản phẩm',

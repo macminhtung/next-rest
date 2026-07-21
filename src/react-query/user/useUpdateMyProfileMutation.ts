@@ -1,16 +1,16 @@
 import { useMutation, QueryClient } from '@tanstack/react-query';
 import type { TUseMutationOptions } from '@/react-query/types';
 import { axiosApi } from '@/react-query/api-interceptors';
-import type { TUpdateProfilePayload } from '@/react-query/auth';
+import type { TUpdateMyProfilePayload } from '@/react-query/user';
 
-export const useUpdateProfileMutation = <P extends TUpdateProfilePayload, R extends P>(
+export const useUpdateMyProfileMutation = <P extends TUpdateMyProfilePayload, R extends P>(
   options?: TUseMutationOptions<P, R>,
   queryClient?: QueryClient
 ) =>
   useMutation(
     {
       mutationKey: ['useUpdateProfileMutation'],
-      mutationFn: (payload: P) => axiosApi.put<unknown, R, P>('auth/profile', payload),
+      mutationFn: (payload: P) => axiosApi.put<unknown, R, P>('user/me/profile', payload),
       ...options,
     },
     queryClient

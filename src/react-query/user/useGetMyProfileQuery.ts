@@ -6,19 +6,19 @@ import type { TAuthUser } from '@/store';
 
 declare module '@/react-query/types' {
   interface QueryKey {
-    GetProfile: ['GetProfile'];
+    GetMyProfile: ['GetMyProfile'];
   }
 }
 
-export const useGetProfileQuery = <R extends TAuthUser>(
+export const useGetMyProfileQuery = <R extends TAuthUser>(
   options?: TUseQueryOptions<R>,
   queryClient?: QueryClient
 ) =>
   useProcessQueryFuncs<R>(
     useQuery(
       {
-        queryKey: ['GetProfile'],
-        queryFn: ({ signal }) => axiosApi.get<unknown, R>('auth/profile', { signal }),
+        queryKey: ['GetMyProfile'],
+        queryFn: ({ signal }) => axiosApi.get<unknown, R>('user/me/profile', { signal }),
         ...options,
       },
       queryClient

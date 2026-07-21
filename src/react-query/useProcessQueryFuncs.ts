@@ -13,7 +13,7 @@ export const useProcessQueryFuncs = <R>(
 
   useEffect(() => {
     if (enabled) {
-      if (onLoading) onLoading(result.isFetching);
+      if (onLoading) onLoading(result.isLoading);
       if (onSuccess && !result.isFetching && result.isSuccess) onSuccess(result.data);
       if (onError && !result.isFetching && result.isError) onError(result.error);
     }

@@ -35,7 +35,7 @@ export default async function LocaleLayout({
         <Toaster position='top-right' />
         <NextIntlClientProvider>
           <ReactQueryProvider>
-            <ThemeProvider attribute='class'>
+            <ThemeProvider attribute='class' defaultTheme='light'>
               <ClientLayout>{children}</ClientLayout>
             </ThemeProvider>
           </ReactQueryProvider>

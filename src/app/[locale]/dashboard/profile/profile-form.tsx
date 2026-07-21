@@ -7,7 +7,7 @@ import { useZodForm } from '@/components/form/hooks';
 import { EItemFieldType } from '@/components/form/enums';
 import { ButtonC } from '@/components/ui-customize';
 import { useAppStore } from '@/store';
-import { useUpdateProfileMutation } from '@/react-query/auth';
+import { useUpdateMyProfileMutation } from '@/react-query/user';
 import { showToastSuccess } from '@/common/client-funcs';
 import { uploadImageToS3 } from '@/common/client-funcs';
 
@@ -29,7 +29,7 @@ const ProfileForm = () => {
     values: authUser,
   });
 
-  const updateProfileMutation = useUpdateProfileMutation({
+  const updateMyProfileMutation = useUpdateMyProfileMutation({
     onSuccess: (data) => {
       setAuthUser({ ...authUser, ...data });
       showToastSuccess(t('updatedSuccessfully'));
@@ -39,9 +39,9 @@ const ProfileForm = () => {
   const onSubmit = useCallback(
     (values: z.infer<typeof profileSchema>) => {
       const { email: _, ...rest } = values;
-      updateProfileMutation.mutate(rest);
+      updateMyProfileMutation.mutate(rest);
     },
-    [updateProfileMutation]
+    [updateMyProfileMutation]
   );
 
   return (
@@ -63,7 +63,7 @@ const ProfileForm = () => {
       <ItemField iType={EItemFieldType.INPUT} label={t('lastName')} fieldName='lastName' />
       <ButtonC
         type='submit'
-        loading={updateProfileMutation.isPending}
+        loading={updateMyProfileMutation.isPending}
         disabled={!methods.formState.isDirty}
       >
         {t('submit')}

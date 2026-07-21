@@ -2,7 +2,6 @@ export const enTranslation = {
   signIn: 'SignIn',
   signUp: 'SignUp',
   signOut: 'SignOut',
-
   submit: 'Submit',
   email: 'Email',
   password: 'Password',
@@ -26,6 +25,7 @@ export const enTranslation = {
   createdSuccessfully: 'Created successfully',
   updatedSuccessfully: 'Updated successfully',
   deletedSuccessfully: 'Deleted successfully',
+  landingPage: 'Landing page',
   product: 'Product',
   productManagement: 'Product Management',
   createProduct: 'Create Product',

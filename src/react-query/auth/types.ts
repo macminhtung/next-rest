@@ -15,10 +15,4 @@ export type TUpdatePasswordPayload = {
   newPassword: string;
 };
 
-export type TUpdateProfilePayload = {
-  avatar?: string;
-  firstName: string;
-  lastName: string;
-};
-
 export type TGeneratePreSignedUrl = { contentType: string; filename: string };

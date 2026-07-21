@@ -27,8 +27,8 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
       {isLoading && <LoadingOverlay className='[&>svg]:size-20' />}
       <div className='flex gap-5 py-1 mb-5'>
         <InputC
-          className='w-full md:max-w-100 ring-0'
-          startItem={<Search className='ml-4 size-4' />}
+          className='w-full md:max-w-100 ring-0!'
+          startItem={<Search className='ml-3.5 size-4' />}
           onChange={(e) => setKeySearch(e.target.value)}
           placeholder='Search products'
         />
