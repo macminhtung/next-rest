@@ -8,19 +8,17 @@ import EyeCloseIcon from '@/common/icons/eye-close.svg';
 export type TPasswordCProps = Omit<TInputCProps, 'type' | 'endItem'>;
 
 export const PasswordC = (props: TPasswordCProps) => {
-  const { className, ...rest } = props;
   const [show, setShow] = useState(false);
 
   return (
     <InputC
       type={show ? undefined : 'password'}
-      className={className}
-      {...rest}
       endItem={
         <div className='cursor-pointer' onClick={() => setShow(!show)}>
           {show ? <EyeOpenIcon /> : <EyeCloseIcon />}
         </div>
       }
+      {...props}
     />
   );
 };

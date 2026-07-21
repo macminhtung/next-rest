@@ -49,8 +49,8 @@ export const Products = (props: { queryConfig: TRequestConfig<TGetPaginatedRecor
         <InputC
           className='w-full md:max-w-100 ring-0!'
           startItem={<Search className='ml-3.5 size-4' />}
-          defaultValue={keySearch}
-          onChange={(e) => setKeySearch(e.target.value)}
+          value={keySearch}
+          onChange={(e) => setKeySearch(e.target.value.trim())}
           placeholder='Search products'
         />
       </div>

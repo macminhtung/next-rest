@@ -48,7 +48,7 @@ const CartPage = () => {
                 {t('quantity')}: {item.quantity}
               </p>
               <p>
-                {t('price')}: {item.unitPrice}
+                {t('unitPrice')}: {item.unitPrice}
               </p>
               <InputC
                 type='number'

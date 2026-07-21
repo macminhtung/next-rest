@@ -145,9 +145,10 @@ const ProductManagementPage = () => {
           </DialogC>
 
           <InputC
+            value={keySearch}
             className='w-full md:max-w-100 ring-0'
             startItem={<Search className='ml-4 size-4' />}
-            onChange={(e) => setKeySearch(e.target.value)}
+            onChange={(e) => setKeySearch(e.target.value.trim())}
             placeholder='Search products'
           />
         </div>
